@@ -24,21 +24,21 @@ Aqua Adventure Bali adalah mobile aplikasi untuk mencari informasi mengenai pera
 2. **Pengguna Terdaftar** bisa memberikan rating, checkout, forum, wishlist.
 3. **Admin** bisa menambah, menghapus, mengedit, dan mengonfirmasi order.
 
-## Alur
+## Alur Integrasi Web Service
 Setiap data yang berkaitan dengan modul (product, ulasan, wishlist, forum, checkout, complain, dan autentikasi) akan disimpan ke dalam database deployment [http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/](http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/) menggunakan mekanisme berikut:
 
-### 1. Endpoint POST Request
+### 1. Penyimpanan Data ke Database
 * Mengirimkan data dari Flutter atau API client ke backend django untuk disimpan dalam database.
 
-#### Proses:
+#### a. Endpoint POST Request:
 1. Flutter mengirim data melalui POST request ke endpoint tertentu (misalnya, `http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/create-flutter-module/` untuk modul produk).
 2. Django memproses data yang diterima, melakukan validasi, dan memastikan data sesuai dengan skema database.
 3. Data yang valid akan disimpan ke dalam database Django sesuai model di database.
 
-#### Validasi Data
+#### b. Validasi Data
 * Validasi input fields data dilakukan dalam Flutter.
 
-#### Response dari Backend Django
+#### c. Response dari Backend Django
 * Setelah data berhasil disimpan, backend django akan mengirimkan response ke client berupa:
   - **Status:** HTTP 201 (Created) jika berhasil.
   - **Pesan:** Informasi sukses atau pesan kesalahan jika gagal.
