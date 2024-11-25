@@ -49,7 +49,7 @@ Data yang disimpan dalam database diakses melalui proses fetching.
 #### a. Endpoint GET Request
 * **Tujuan:** Mengambil data dari database sesuai dengan modul atau filter tertentu.
 * Flutter client mengirim GET request ke endpoint spesifik (misalnya, `http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/json-module/` untuk modul produk).
-* Django mengambil data dari database menggunakan query SQL atau ORM (Object Relational Mapping).
+* Django mengambil data dari database menggunakan query db.sqlite3
 * Backend django memformat data dan mengirimkan response ke client.
 
 #### b. Response dari Backend Django
