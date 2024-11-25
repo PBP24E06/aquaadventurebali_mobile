@@ -1,16 +1,58 @@
-# aquaadventurebali_mobile
+# Aqua Adventure Bali - Mobile
 
-A new Flutter project.
+## Anggota Kelompok
+* Paima Ishak Melkisedek Purba - 2306275986
+* William Alexander - 2306226914
+* Reyvano Mario Sianturi - 2306275613
+* Athaillah Sifa Tanudatar - 2306275683
+* Aisyah Hastomo - 2306211780
+* Rifqisyandi Khairurrizal - 2306152216
 
-## Getting Started
+## Deskripsi Aplikasi
+Aqua Adventure Bali adalah mobile aplikasi untuk mencari informasi mengenai peralatan snorkeling dan toko yang menjualnya di Bali. Kami mendapat inspirasi karena Bali merupakan salah satu destinasi wisata di Indonesia yang terkenal sampai ke mancanegara dan di Bali terdapat banyak sekali pantai yang menyediakan wisata untuk snorkeling. Aplikasi ini bermanfaat bagi para wisatawan ataupun warga lokal Bali yang memiliki minat dalam olahraga snorkeling untuk mencari informasi mengenai peralatan snorkeling serta tempat menjualnya.
 
-This project is a starting point for a Flutter application.
+## Daftar Modul yang Akan Diimplementasikan
+* Product, Paima
+* Ulasan, William
+* Wishlist, Aisyah
+* Forum, Atha
+* Checkout, Mario
+* Complain/Pengaduan, Rifqi
 
-A few resources to get you started if this is your first Flutter project:
+## Role Pengguna
+1. **Pengguna Umum** hanya dapat melihat produk dan melihat forum.
+2. **Pengguna Terdaftar** bisa memberikan rating, checkout, forum, wishlist.
+3. **Admin** bisa menambah, menghapus, mengedit, dan mengonfirmasi order.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Alur
+Setiap data yang berkaitan dengan modul (product, ulasan, wishlist, forum, checkout, complain, dan autentikasi) akan disimpan ke dalam database deployment [http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/](http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/) menggunakan mekanisme berikut:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 1. Endpoint POST Request
+* Mengirimkan data dari Flutter atau API client ke backend django untuk disimpan dalam database.
+
+#### Proses:
+1. Flutter mengirim data melalui POST request ke endpoint tertentu (misalnya, `http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/create-flutter-module/` untuk modul produk).
+2. Django memproses data yang diterima, melakukan validasi, dan memastikan data sesuai dengan skema database.
+3. Data yang valid akan disimpan ke dalam database Django sesuai model di database.
+
+#### Validasi Data
+* Validasi input fields data dilakukan dalam Flutter.
+
+#### Response dari Backend Django
+* Setelah data berhasil disimpan, backend django akan mengirimkan response ke client berupa:
+  - **Status:** HTTP 201 (Created) jika berhasil.
+  - **Pesan:** Informasi sukses atau pesan kesalahan jika gagal.
+
+### 2. Penggunaan Data dari Database
+Data yang disimpan dalam database diakses melalui proses fetching.
+
+#### a. Endpoint GET Request
+* **Tujuan:** Mengambil data dari database sesuai dengan modul atau filter tertentu.
+* Flutter client mengirim GET request ke endpoint spesifik (misalnya, `http://paima-ishak-aquaadventurebali.pbp.cs.ui.ac.id/json-module/` untuk modul produk).
+* Django mengambil data dari database menggunakan query SQL atau ORM (Object Relational Mapping).
+* Backend django memformat data dan mengirimkan response ke client.
+
+#### b. Response dari Backend Django
+* Response dari backend django akan berisi:
+  - **Status:** HTTP 200 (OK) jika berhasil.
+  - **Data:** Data yang diminta dalam bentuk JSON atau format lain yang disepakati.
