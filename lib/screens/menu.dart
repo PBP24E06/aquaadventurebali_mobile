@@ -1,123 +1,68 @@
-import 'package:aquaadventurebali_mobile/widgets/card.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
+import 'package:aquaadventurebali_mobile/screens/product_page.dart';
+import 'package:aquaadventurebali_mobile/screens/transaction_history.dart';
+import 'package:aquaadventurebali_mobile/screens/user_profile.dart';
+import 'package:aquaadventurebali_mobile/screens/whislist.dart';
 import 'package:flutter/material.dart';
-import 'package:aquaadventurebali_mobile/widgets/left_drawer.dart';
-import 'package:aquaadventurebali_mobile/widgets/card.dart';
+import 'package:flutter/widgets.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget{
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
   
+}
 
-  final List<ItemHomepage> items = [
-      ItemHomepage("Lihat Daftar Produk", Icons.format_list_bulleted, const Color.fromARGB(255, 17, 52, 80)),
-      ItemHomepage("Tambah Produk", Icons.add, const Color.fromARGB(255, 17, 95, 20)),
-      ItemHomepage("Logout", Icons.logout, const Color.fromARGB(255, 169, 36, 27)),
+class _MyHomePageState extends State<MyHomePage> {
+  int _screenIndex = 0;
+  final List<Widget> body = [
+    ProductPage(),
+    TransactionHistory(),
+    Whislist(),
+    CheckoutFormPage(),
+    UserProfile(),
   ];
 
-  MyHomePage({super.key});
-
-  @override
+@override
   Widget build(BuildContext context) {
-    // Scaffold menyediakan struktur dasar halaman dengan AppBar dan body.
     return Scaffold(
-      // AppBar adalah bagian atas halaman yang menampilkan judul.
-      appBar: AppBar(
-        title: const Text(
-          'Aqua Adventure Bali',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+      body: body[_screenIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color(0xFF1F2937),
+        currentIndex: _screenIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _screenIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
-        ),
-        // Warna latar belakang AppBar diambil dari skema warna tema aplikasi.
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      drawer: const LeftDrawer(),
-      // Body halaman dengan padding di sekelilingnya.
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun widget secara vertikal dalam sebuah kolom.
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Memberikan jarak vertikal 16 unit.
-            const SizedBox(height: 16.0),
-
-            // Menempatkan widget berikutnya di tengah halaman.
-            Center(
-              child: Column(
-                // Menyusun teks dan grid item secara vertikal.
-
-                children: [
-                  // Menampilkan teks sambutan dengan gaya tebal dan ukuran 18.
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      'Welcome to Aqua Adventure Bali',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-
-                  // Grid untuk menampilkan ItemCard dalam bentuk grid 3 kolom.
-                  GridView.count(
-                    primary: true,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    // Agar grid menyesuaikan tinggi kontennya.
-                    shrinkWrap: true,
-
-                    // Menampilkan ItemCard untuk setiap item dalam list items.
-                    children: items.map((ItemHomepage item) {
-                      return ItemCard(item);
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history_outlined),
+            label: 'Transaksi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Whistlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_checkout),
+            label: 'Checkout',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Akun',
+          ),
+        ],
       ),
     );
   }
 }
-
-
-class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan title dan content.
-
-  final String title;  // Judul kartu.
-  final String content;  // Isi kartu.
-
-  const InfoCard({super.key, required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      // Membuat kotak kartu dengan bayangan dibawahnya.
-      elevation: 2.0,
-      child: Container(
-        // Mengatur ukuran dan jarak di dalam kartu.
-        width: MediaQuery.of(context).size.width / 3.5, // menyesuaikan dengan lebar device yang digunakan.
-        padding: const EdgeInsets.all(16.0),
-        // Menyusun title dan content secara vertikal.
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8.0),
-            Text(content),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
-
