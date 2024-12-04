@@ -27,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
 @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: body[_screenIndex].searchProductBar(context),
       body: body[_screenIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
