@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ProductPage(),
     TransactionHistory(),
     Whislist(),
-    CheckoutFormPage(),
+    CheckoutFormPage(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
     UserProfile(),
   ];
 
