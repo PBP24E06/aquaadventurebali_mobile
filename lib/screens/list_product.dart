@@ -12,7 +12,7 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  Future<List<Product>> fetchMood(CookieRequest request) async {
+  Future<List<Product>> fetchProduct(CookieRequest request) async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     final response = await request.get('http://127.0.0.1:8000/json-product/');
     
@@ -38,7 +38,7 @@ class _ProductPageState extends State<ProductPage> {
       ),
       drawer: const LeftDrawer(),
       body: FutureBuilder(
-        future: fetchMood(request),
+        future: fetchProduct(request),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return const Center(child: CircularProgressIndicator());

@@ -54,7 +54,7 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
 
         final product = snapshot.data!;
         // print("field gambar: " + product.fields.gambar);
-        print("URL Gambar: http://127.0.0.1:8000/${product.fields.gambar}");
+        print("URL Gambar: ${product.fields.gambar}");
         
 
         return Scaffold(
@@ -82,6 +82,8 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                   //     height: 100,
                   //     fit: BoxFit.cover,
                   //     errorBuilder: (context, error, stackTrace) {
+                  //       debugPrint("Error loading image: $error");
+                  //       debugPrint("StackTrace: $stackTrace");
                   //       return const Text("Gagal memuat gambar");
                   //     },
                   //     loadingBuilder: (context, child, loadingProgress) {
@@ -203,7 +205,7 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                                   if (response['status'] == 'success') {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
-                                      content: Text("Checkout berhasil !"),
+                                      content: Text("Checkout berhasil!"),
                                       ));
                                       Navigator.pushReplacement(
                                           context,

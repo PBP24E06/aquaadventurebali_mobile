@@ -19,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _screenIndex = 0;
   final List<Widget> body = [
     ProductPage(),
-    TransactionHistory(),
+    TransactionHistoryPage(),
     Whislist(),
     CheckoutFormPage(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
     UserProfile(),
