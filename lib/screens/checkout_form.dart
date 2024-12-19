@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 
 class CheckoutFormPage extends StatefulWidget {
   final String productId;
@@ -59,9 +60,14 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
 
         return Scaffold(
           appBar: AppBar(
-            title: const Center(
+            title: Center(
               child: Text(
                 'Form Checkout',
+                style: GoogleFonts.lato(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
@@ -72,26 +78,17 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Image.network(
-                  //     "http://127.0.0.1:8000/${product.fields.gambar}",
-                  //     width: 100,
-                  //     height: 100,
-                  //     fit: BoxFit.cover,
-                  //     errorBuilder: (context, error, stackTrace) {
-                  //       debugPrint("Error loading image: $error");
-                  //       debugPrint("StackTrace: $stackTrace");
-                  //       return const Text("Gagal memuat gambar");
-                  //     },
-                  //     loadingBuilder: (context, child, loadingProgress) {
-                  //       if (loadingProgress == null) return child;
-                  //       return const Center(child: CircularProgressIndicator());
-                  //     },
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image(
+                      image: AssetImage('assets/${product.fields.gambar}'),
+                      width: 150,
+                      height: 150,
+                    )
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -110,11 +107,11 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          suffixIcon: Icon(Icons.person),
+                          filled: true
                         ),
                         onChanged: (String? value) {
-                          
                           _fullName = value!;
-                          
                         },
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
@@ -136,11 +133,11 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          suffixIcon: Icon(Icons.email_rounded),
+                          filled: true
                         ),
                         onChanged: (String? value) {
-                          
                           _email = value!;
-                          
                         },
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
@@ -165,6 +162,8 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
+                          suffixIcon: Icon(Icons.local_phone_rounded),
+                          filled: true
                         ),
                         onChanged: (String? value) {
                           
@@ -181,13 +180,16 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                     ),
                   ),
                   Align(
-                    alignment: Alignment.bottomLeft,
+                    alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                              Theme.of(context).colorScheme.primary),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white, backgroundColor: Colors.blue.shade900, // Warna teks tombol
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0), 
+                          ),
+                          elevation: 6, // Efek bayangan tombol
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
