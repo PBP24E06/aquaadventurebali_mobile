@@ -1,3 +1,5 @@
+import 'package:aquaadventurebali_mobile/screens/all_review.dart';
+import 'package:aquaadventurebali_mobile/screens/review_form.dart';
 import 'package:aquaadventurebali_mobile/widgets/left_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
@@ -112,6 +114,15 @@ class _ProductPageState extends State<ProductPage> {
                                   ElevatedButton(
                                     onPressed: () {
                                       // Aksi untuk detail produk
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AllReviewPage(
+                                                productId: snapshot.data![index].pk,
+                                                productName: product.name,
+                                            ),
+                                        ),
+                                    );
                                     },
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(

@@ -74,7 +74,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await request.postJson(
-                      "http://127.0.0.1:8000/create-review-by-ajax/${widget.productId}",
+                      "http://127.0.0.1:8000/create-review/${widget.productId}",
                       jsonEncode({
                         'rating': _rating,
                         'review_text': _reviewController.text,
