@@ -1,3 +1,4 @@
+import 'package:aquaadventurebali_mobile/models/review.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -20,24 +21,18 @@ class AllReviewPage extends StatefulWidget {
 }
 
 class _AllReviewPageState extends State<AllReviewPage> {
-  Future<List<dynamic>> fetchReviews(CookieRequest request) async {
-
+  Future<List<Review>> fetchReviews(CookieRequest request) async {
     final response = await request.get(
       'http://127.0.0.1:8000/show-json-review/${widget.productId}'
     );
-
-    print("Response from server: $response");
     
-    if (response is List) {
-        return response;
+    List<Review> listReview = [];
+    for (var d in response) {
+      if (d != null) {
+        listReview.add(Review.fromJson(d));
+      }
     }
-    
-    if (response is Map && response.containsKey('reviews')) {
-        return List<dynamic>.from(response['reviews']);
-    }
-    
-    return [];
-
+    return listReview;
   }
 
 
@@ -72,7 +67,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
           var reviews = snapshot.data!;
           double avgRating = 0;
           if (reviews.isNotEmpty) {
-            avgRating = reviews.fold(0.0, (sum, review) => sum + review['fields']['rating']) / reviews.length;
+            avgRating = reviews.fold(0.0, (sum, review) => sum + review.fields.rating) / reviews.length;
           }
 
           return SingleChildScrollView(
@@ -145,7 +140,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              review['fields']['username'],
+                              review.fields.username,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -153,7 +148,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
                             Row(
                               children: [
                                 Text(
-                                  '${review['fields']['rating']}.0',
+                                  '${review.fields.rating}.0',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -168,9 +163,9 @@ class _AllReviewPageState extends State<AllReviewPage> {
                             ),
                           ],
                         ),
-                        if (review['fields']['review_text']?.isNotEmpty ?? false) ...[
+                        if (review.fields.reviewText.isNotEmpty) ...[
                           const SizedBox(height: 8),
-                          Text(review['fields']['review_text']),
+                          Text(review.fields.reviewText),
                         ],
                       ],
                     ),
