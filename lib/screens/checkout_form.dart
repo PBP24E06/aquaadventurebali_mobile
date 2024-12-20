@@ -22,8 +22,6 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
   String _phoneNumber = "";
 
   Future<Product> fetchProduct(CookieRequest request, String productId) async {
-    
-    
     final response = await request.get('http://127.0.0.1:8000/json-product/$productId');
 
     var data = response;
@@ -60,17 +58,28 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
 
         return Scaffold(
           appBar: AppBar(
-            title: Center(
+            title: Align(
+              alignment: Alignment.topLeft,
               child: Text(
-                'Form Checkout',
+                'Checkout',
                 style: GoogleFonts.lato(
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ), // Ikon panah kembali
+              onPressed: () {
+                Navigator.pop(context); // Navigasi kembali ke halaman sebelumnya
+              },
+            ),
+            backgroundColor: Colors.white,
             foregroundColor: Colors.white,
           ),
           // TODO: Tambahkan drawer yang sudah dibuat di sini
@@ -83,17 +92,66 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Image(
-                      image: AssetImage('assets/${product.fields.gambar}'),
-                      width: 150,
-                      height: 150,
+                    child: Container(
+                      decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color.fromARGB(246, 223, 217, 217), 
+                        width: 4, 
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 219, 231, 225),
+                          offset: Offset(
+                            5.0,
+                            5.0,
+                          ),
+                          blurRadius: 10.0,
+                          spreadRadius: 2.0,
+                        ), //BoxShadow
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 0.0,
+                          spreadRadius: 0.0,
+                        ), //BoxShadow
+                      ],
+                    ),
+                      child: Image(
+                        image: AssetImage('assets/${product.fields.gambar}'),
+                        width: 150,
+                        height: 150,
+                      )
                     )
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Nama Produk: ${product.fields.name}",
-                      
+                      product.fields.name, 
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ), 
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Rp ${product.fields.harga}", 
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ), 
                     ),
                   ),
                   Padding(
@@ -185,11 +243,12 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Colors.blue.shade900, // Warna teks tombol
+                          foregroundColor: Colors.white, backgroundColor: Colors.green, // Warna teks tombol
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0), 
                           ),
                           elevation: 6, // Efek bayangan tombol
+                          fixedSize: Size.fromHeight(40)
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -220,12 +279,24 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                                               Text("Terdapat kesalahan, silakan coba lagi."),
                                       ));
                                   }
-                              }
-                          }
-                      },
-                        child: const Text(
-                          "Checkout",
-                          style: TextStyle(color: Colors.white),
+                                }
+                            }
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center, 
+                          children: [
+                            Icon(
+                              Icons.shopping_cart_checkout,
+                              color: Colors.white, 
+                            ),
+                            Text(
+                              "Checkout",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
