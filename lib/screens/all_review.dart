@@ -5,11 +5,14 @@ import 'package:provider/provider.dart';
 class AllReviewPage extends StatefulWidget {
   final String productId;
   final String productName;
+  final String productImage;
+
 
   const AllReviewPage({
     super.key, 
     required this.productId,
     required this.productName,
+    required this.productImage,
   });
 
   @override
@@ -17,12 +20,27 @@ class AllReviewPage extends StatefulWidget {
 }
 
 class _AllReviewPageState extends State<AllReviewPage> {
-  Future<Map<String, dynamic>> fetchReviews(CookieRequest request) async {
+  Future<List<dynamic>> fetchReviews(CookieRequest request) async {
+
     final response = await request.get(
       'http://127.0.0.1:8000/show-json-review/${widget.productId}'
     );
-    return response;
+
+    print("Response from server: $response");
+    
+    if (response is List) {
+        return response;
+    }
+    
+    if (response is Map && response.containsKey('reviews')) {
+        return List<dynamic>.from(response['reviews']);
+    }
+    
+    return [];
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +54,9 @@ class _AllReviewPageState extends State<AllReviewPage> {
         ),
         title: const Text('Reviews'),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
+      body: FutureBuilder<List<dynamic>>(
         future: fetchReviews(request),
-        builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -51,7 +69,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
             return const Center(child: Text('No reviews yet'));
           }
 
-          var reviews = snapshot.data!['reviews'] as List;
+          var reviews = snapshot.data!;
           double avgRating = 0;
           if (reviews.isNotEmpty) {
             avgRating = reviews.fold(0.0, (sum, review) => sum + review['fields']['rating']) / reviews.length;
@@ -62,6 +80,29 @@ class _AllReviewPageState extends State<AllReviewPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      "http://127.0.0.1:8000/${widget.productImage}",  // Add productImage to your widget parameters
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 200,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: Text('Image not available'),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                
                 // Product Name
                 Text(
                   widget.productName,

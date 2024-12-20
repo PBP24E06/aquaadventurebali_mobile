@@ -120,6 +120,7 @@ class _ProductPageState extends State<ProductPage> {
                                             builder: (context) => AllReviewPage(
                                                 productId: snapshot.data![index].pk,
                                                 productName: product.name,
+                                                productImage: product.gambar,
                                             ),
                                         ),
                                     );
