@@ -1,6 +1,5 @@
 import 'package:aquaadventurebali_mobile/screens/checkout.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
-import 'package:aquaadventurebali_mobile/screens/product_page.dart';
 import 'package:aquaadventurebali_mobile/screens/transaction_history.dart';
 import 'package:aquaadventurebali_mobile/screens/user_profile.dart';
 import 'package:aquaadventurebali_mobile/screens/whislist.dart';
