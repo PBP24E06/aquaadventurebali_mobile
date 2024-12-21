@@ -21,9 +21,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _screenIndex = 0;
   final List<Widget> body = [
     ProductPage(),
-    TransactionHistory(),
+    TransactionHistoryPage(),
     Whislist(),
-    CheckoutFormPage(),
     UserProfile(),
   ];
 
@@ -54,10 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
             label: 'Whistlist',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_checkout),
-            label: 'Checkout',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
