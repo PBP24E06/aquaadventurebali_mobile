@@ -1,5 +1,6 @@
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:aquaadventurebali_mobile/models/transaction.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -103,87 +104,157 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [ 
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: const Color.fromARGB(246, 223, 217, 217), 
-                                      width: 4, 
-                                    ),
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10.0),
-                                      topRight: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    ),
-
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Color.fromARGB(255, 219, 231, 225),
-                                        offset: Offset(
-                                          5.0,
-                                          5.0,
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color.fromARGB(246, 223, 217, 217), 
+                                          width: 4, 
                                         ),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 2.0,
-                                      ), //BoxShadow
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 0.0,
-                                        spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                    ],
-                                  ),
-                                    child: Image(
-                                      image: AssetImage('assets/${productSnapshot.data!.fields.gambar}'),
-                                      width: 100,
-                                      height: 100,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(10.0),
+                                          topRight: Radius.circular(10.0),
+                                          bottomLeft: Radius.circular(10.0),
+                                          bottomRight: Radius.circular(10.0),
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color.fromARGB(255, 219, 231, 225),
+                                            offset: Offset(
+                                              5.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                          BoxShadow(
+                                            color: Colors.white,
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 0.0,
+                                            spreadRadius: 0.0,
+                                          ), //BoxShadow
+                                        ],
+                                      ),
+                                        child: Image(
+                                          image: AssetImage('assets/${productSnapshot.data!.fields.gambar}'),
+                                          width: 100,
+                                          height: 100,
+                                        )
+                                      )
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(1.0),
+                                            child: Text(
+                                              "${productSnapshot.data!.fields.name}",
+                                              style: const TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.visible,
+                                              
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(1.0),
+                                            child: Text(
+                                              "Rp ${productSnapshot.data!.fields.harga}",
+                                              style: const TextStyle(
+                                                fontSize: 13.0,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              softWrap: true, 
+                                              overflow: TextOverflow.visible, 
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                     )
-                                  )
+                                  ]
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Nama Pemesan: ${snapshot.data![index].fields.name}",
                                     style: const TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Email: ${snapshot.data![index].fields.email}",
                                     style: const TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Email: ${snapshot.data![index].fields.phoneNumber}",
                                     style: const TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Text(
-                                    "Email: ${snapshot.data![index].fields.checkoutTime}",
+                                    "Waktu Checkout: ${snapshot.data![index].fields.checkoutTime}",
                                     style: const TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
                                 ),
-                                
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white, backgroundColor: Colors.green, // Warna teks tombol
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8.0), 
+                                        ),
+                                        elevation: 6, // Efek bayangan tombol
+                                        fixedSize: Size(100, 35), 
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CheckoutFormPage(productId: snapshot.data![index].fields.product),
+                                          ),
+                                        );
+                                      },
+                                             
+                                      child: const Text(
+                                        "Beli Lagi",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),    
                               ]
                             );
                           }
