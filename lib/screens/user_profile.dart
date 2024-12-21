@@ -1,4 +1,5 @@
 import 'package:aquaadventurebali_mobile/models/profile.dart';
+import 'package:aquaadventurebali_mobile/screens/request_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -62,7 +63,7 @@ class _UserProfileState extends State<UserProfile> {
                                                     child: profile.fields.profilePicture.isNotEmpty
                                                         ? ClipOval(
                                                             child: Image.network(
-                                                                "http://127.0.0.1:8000/${profile.fields.profilePicture}",
+                                                                "http://127.0.0.1:8000/static/ikon_botak/foto_ikon.jpg",
                                                                 width: 100,
                                                                 height: 100,
                                                                 fit: BoxFit.cover,
@@ -148,8 +149,21 @@ class _UserProfileState extends State<UserProfile> {
                                             const SizedBox(height: 20),
                                             ElevatedButton.icon(
                                               onPressed: () {
-                                                  // TODO: Implement request admin
-                                              },
+                                                if (profile.fields.role.toUpperCase() == 'ADMIN') {
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                        const SnackBar(
+                                                            content: Text('You are already an admin!'),
+                                                            backgroundColor: Colors.orange,
+                                                        ),
+                                                    );
+                                                } else {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => const RequestAdminPage(),
+                                                        ),
+                                                    );
+                                                }                                              },
                                               icon: const Icon(Icons.admin_panel_settings),
                                               label: const Text('Request Admin'),
                                               style: ElevatedButton.styleFrom(
