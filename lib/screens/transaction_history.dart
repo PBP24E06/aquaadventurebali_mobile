@@ -33,6 +33,19 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
     return listTransaction;
   }
 
+  Future<bool> hasUserReviewed(CookieRequest request, String productId) async {
+    try {
+      final response = await request.get(
+        'http://127.0.0.1:8000/has-user-reviewed-json/$productId/',
+      );
+
+      return response['has_reviewed'] ?? false;
+    } catch (e) {
+
+      return false;
+    }
+  }
+
   Future<Product> fetchProduct(CookieRequest request, String productId) async{
     final response = await request.get('http://127.0.0.1:8000/json-product/$productId');
 
@@ -231,42 +244,46 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                              side: const BorderSide(
-                                                color: Colors.blue,
-                                                width: 1.0,
-                                              ),
-                                            ),
-                                            elevation: 2,
-                                            fixedSize: const Size(90, 35),
-                                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => ReviewFormPage(
-                                                  productId: snapshot.data![index].fields.product,
-                                                  productName: productSnapshot.data!.fields.name,
+                                        FutureBuilder(
+                                          future: hasUserReviewed(request, snapshot.data![index].fields.product),
+                                          builder: (context, AsyncSnapshot<bool> reviewSnapshot) {
+                                            return ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  side: BorderSide(
+                                                    color: (reviewSnapshot.data ?? false) ? Colors.grey : Colors.blue,
+                                                    width: 1.0,
+                                                  ),
                                                 ),
+                                                elevation: 2,
+                                                fixedSize: const Size(110, 35), 
+                                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                              ),
+                                              onPressed: (reviewSnapshot.data ?? false) ? null : () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ReviewFormPage(
+                                                      productId: snapshot.data![index].fields.product,
+                                                      productName: productSnapshot.data!.fields.name,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text(
+                                                (reviewSnapshot.data ?? false) ? "Already Reviewed!" : "Write Review",
+                                                style: GoogleFonts.sourceSans3(
+                                                  fontSize: 12.0,
+                                                  color: (reviewSnapshot.data ?? false) ? Colors.grey : Colors.blue,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                textAlign: TextAlign.center,
                                               ),
                                             );
                                           },
-                                          child: Text(
-                                            "Write Review",
-                                            style: GoogleFonts.sourceSans3(
-                                              fontSize: 12.0,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
                                         ),
-                                        const SizedBox(width: 8),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,
