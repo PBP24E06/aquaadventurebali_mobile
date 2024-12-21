@@ -1,13 +1,15 @@
-import 'package:aquaadventurebali_mobile/screens/checkout.dart';
-import 'package:aquaadventurebali_mobile/screens/product_page.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/transaction_history.dart';
+import 'package:aquaadventurebali_mobile/screens/forum/discussions_screen.dart';
 import 'package:aquaadventurebali_mobile/screens/user_profile.dart';
 import 'package:aquaadventurebali_mobile/screens/whislist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MyHomePage extends StatefulWidget{
-  const MyHomePage({super.key});
+  String uname = "";
+  int userid;
+  MyHomePage(this.uname, this.userid, {super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -15,19 +17,24 @@ class MyHomePage extends StatefulWidget{
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final key = GlobalKey();
   int _screenIndex = 0;
-  final List<Widget> body = [
-    ProductPage(),
-    TransactionHistory(),
-    Whislist(),
-    Checkout(),
-    UserProfile(),
-  ];
 
-@override
+  // Remove body initialization here
+  List<Widget> body = [];
+
+  @override
   Widget build(BuildContext context) {
+    // Initialize the body list dynamically inside build()
+    body = [
+      DiscussionScreens(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9", widget.uname, widget.userid),
+      TransactionHistory(),
+      Whislist(),
+      CheckoutFormPage(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
+      UserProfile(),
+    ];
+
     return Scaffold(
-      appBar: body[_screenIndex].searchProductBar(context),
       body: body[_screenIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -51,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
-            label: 'Whistlist',
+            label: 'Whislist',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_checkout),
@@ -60,6 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
             label: 'Akun',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'DiscussionPage',
           ),
         ],
       ),
