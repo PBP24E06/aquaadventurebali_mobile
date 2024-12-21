@@ -1,6 +1,7 @@
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:aquaadventurebali_mobile/models/transaction.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
+import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,6 +51,19 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
+    if (!request.loggedIn) {
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage())
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator())
+      );
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaction History'),

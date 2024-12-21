@@ -1,4 +1,5 @@
 import 'package:aquaadventurebali_mobile/models/product.dart';
+import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -41,6 +42,18 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
   @override
   Widget build(BuildContext context){
     final request = context.watch<CookieRequest>();
+
+    if (!request.loggedIn) {
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage())
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator())
+      );
+    }
 
     return FutureBuilder<Product>(
       future: fetchProduct(request, widget.productId),
