@@ -125,7 +125,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
 
                       try {
                         final response = await request.postJson(
-                          "http://127.0.0.1:8000/create-review-flutter/",
+                          "http://127.0.0.1:8000/create-review-flutter/${widget.productId}/",
                           jsonEncode({
                             'product': widget.productId,
                             'rating': _rating,

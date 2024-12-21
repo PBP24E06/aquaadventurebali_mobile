@@ -117,12 +117,12 @@ class _ProductPageState extends State<ProductPage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            // builder: (context) => AllReviewPage(
-                                            //     productId: snapshot.data![index].pk,
-                                            //     productName: product.name,
-                                            //     productImage: product.gambar,
-                                            // ),
-                                            builder: (context) => ReviewFormPage(productId: snapshot.data![index].pk, productName: product.name,),
+                                            builder: (context) => AllReviewPage(
+                                                productId: snapshot.data![index].pk,
+                                                productName: product.name,
+                                                productImage: product.gambar,
+                                            ),
+                                            // builder: (context) => ReviewFormPage(productId: snapshot.data![index].pk, productName: product.name,),
                                         ),
                                     );
                                     },
