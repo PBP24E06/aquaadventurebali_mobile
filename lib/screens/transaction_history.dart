@@ -3,6 +3,7 @@ import 'package:aquaadventurebali_mobile/models/transaction.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -140,8 +141,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                       ),
                                         child: Image(
                                           image: AssetImage('assets/${productSnapshot.data!.fields.gambar}'),
-                                          width: 100,
-                                          height: 100,
+                                          width: 80,
+                                          height: 80,
                                         )
                                       )
                                     ),
@@ -153,7 +154,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                             padding: const EdgeInsets.all(1.0),
                                             child: Text(
                                               "${productSnapshot.data!.fields.name}",
-                                              style: const TextStyle(
+                                              style: GoogleFonts.sourceSans3(
+                                                textStyle: Theme.of(context).textTheme.displayLarge,
                                                 fontSize: 14.0,
                                                 fontWeight: FontWeight.normal,
                                               ),
@@ -167,7 +169,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                             padding: const EdgeInsets.all(1.0),
                                             child: Text(
                                               "Rp ${productSnapshot.data!.fields.harga}",
-                                              style: const TextStyle(
+                                              style: GoogleFonts.lato(
+                                                textStyle: Theme.of(context).textTheme.displayLarge,
                                                 fontSize: 13.0,
                                                 fontWeight: FontWeight.normal,
                                               ),
@@ -184,7 +187,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Nama Pemesan: ${snapshot.data![index].fields.name}",
-                                    style: const TextStyle(
+                                    style: GoogleFonts.sourceSans3(
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -194,7 +197,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Email: ${snapshot.data![index].fields.email}",
-                                    style: const TextStyle(
+                                    style: GoogleFonts.sourceSans3(
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -203,8 +206,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                 Padding(
                                   padding: const EdgeInsets.all(1.0),
                                   child: Text(
-                                    "Email: ${snapshot.data![index].fields.phoneNumber}",
-                                    style: const TextStyle(
+                                    "Kontak Pemesan: ${snapshot.data![index].fields.phoneNumber}",
+                                    style: GoogleFonts.sourceSans3(
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -214,7 +217,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   padding: const EdgeInsets.all(1.0),
                                   child: Text(
                                     "Waktu Checkout: ${snapshot.data![index].fields.checkoutTime}",
-                                    style: const TextStyle(
+                                    style: GoogleFonts.sourceSans3(
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -227,12 +230,16 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
 
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white, backgroundColor: Colors.green, // Warna teks tombol
+                                        foregroundColor: Colors.white, // Warna teks tombol
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0), 
+                                          side: const BorderSide(
+                                            color: Colors.green, // Warna border
+                                            width: 1.0, // Ketebalan border
+                                          ),
                                         ),
-                                        elevation: 6, // Efek bayangan tombol
-                                        fixedSize: Size(100, 35), 
+                                        elevation: 2, // Efek bayangan tombol
+                                        fixedSize: Size(90, 35), 
                                       ),
                                       onPressed: () {
                                         Navigator.push(
@@ -243,11 +250,11 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                         );
                                       },
                                              
-                                      child: const Text(
+                                      child: Text(
                                         "Beli Lagi",
-                                        style: TextStyle(
+                                        style: GoogleFonts.sourceSans3(
                                           fontSize: 11,
-                                          color: Colors.white,
+                                          color: Colors.green,
                                           fontWeight: FontWeight.normal,
                                         ),
                                         textAlign: TextAlign.center,
