@@ -157,7 +157,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                               style: GoogleFonts.sourceSans3(
                                                 textStyle: Theme.of(context).textTheme.displayLarge,
                                                 fontSize: 14.0,
-                                                fontWeight: FontWeight.normal,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                               softWrap: true,
                                               maxLines: 2,
@@ -172,7 +172,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                               style: GoogleFonts.lato(
                                                 textStyle: Theme.of(context).textTheme.displayLarge,
                                                 fontSize: 13.0,
-                                                fontWeight: FontWeight.normal,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                               softWrap: true, 
                                               overflow: TextOverflow.visible, 
@@ -188,7 +188,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   child: Text(
                                     "Nama Pemesan: ${snapshot.data![index].fields.name}",
                                     style: GoogleFonts.sourceSans3(
-                                      fontSize: 11.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
@@ -198,7 +198,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   child: Text(
                                     "Email: ${snapshot.data![index].fields.email}",
                                     style: GoogleFonts.sourceSans3(
-                                      fontSize: 11.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
@@ -208,7 +208,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   child: Text(
                                     "Kontak Pemesan: ${snapshot.data![index].fields.phoneNumber}",
                                     style: GoogleFonts.sourceSans3(
-                                      fontSize: 11.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
@@ -218,7 +218,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   child: Text(
                                     "Waktu Checkout: ${snapshot.data![index].fields.checkoutTime}",
                                     style: GoogleFonts.sourceSans3(
-                                      fontSize: 11.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   )
@@ -240,6 +240,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                         ),
                                         elevation: 2, // Efek bayangan tombol
                                         fixedSize: Size(90, 35), 
+                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                                       ),
                                       onPressed: () {
                                         Navigator.push(
@@ -253,7 +254,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                       child: Text(
                                         "Beli Lagi",
                                         style: GoogleFonts.sourceSans3(
-                                          fontSize: 11,
+                                          fontSize: 12.0,
                                           color: Colors.green,
                                           fontWeight: FontWeight.normal,
                                         ),
