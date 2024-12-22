@@ -20,7 +20,7 @@ class TransactionHistoryPage extends StatefulWidget{
 class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
 
   Future<List<Transaction>> fetchTransactionHistory(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/get-user-transaction-id/');
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/get-user-transaction-id/');
 
     var data = response;
     

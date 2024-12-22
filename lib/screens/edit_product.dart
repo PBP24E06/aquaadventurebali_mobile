@@ -48,7 +48,7 @@ class _EditProductPageState extends State<EditProductPage> {
 
   // Fungsi untuk mengirim permintaan PUT ke API Django
   Future<void> _updateProduct() async {
-    final url = Uri.parse('http://127.0.0.1:8000/edit-product-flutter/${widget.pk}/');
+    final url = Uri.parse('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/edit-product-flutter/${widget.pk}/');
     final response = await http.put(
       url,
       headers: {

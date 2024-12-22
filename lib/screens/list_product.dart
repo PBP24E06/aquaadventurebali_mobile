@@ -49,7 +49,7 @@ Future<void> _deleteProduct(String id) async {
   }
 
 Future<bool> isAdmin(CookieRequest request) async {
-  final response = await request.get('http://127.0.0.1:8000/user-status/');
+  final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/user-status/');
   return response['is_admin'];
 }
 

@@ -23,7 +23,7 @@ class AllReviewPage extends StatefulWidget {
 class _AllReviewPageState extends State<AllReviewPage> {
   Future<List<Review>> fetchReviews(CookieRequest request) async {
     final response = await request.get(
-      'http://127.0.0.1:8000/show-json-review/${widget.productId}'
+      'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-json-review/${widget.productId}'
     );
     
     List<Review> listReview = [];

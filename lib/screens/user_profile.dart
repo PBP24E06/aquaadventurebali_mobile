@@ -19,7 +19,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
    Future<Profile?> fetchProfile(request) async {
        try {
-           var response = await request.get('http://127.0.0.1:8000/show-profile-json/');
+           var response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-profile-json/');
            if (response is List && response.isNotEmpty) {
                var profileData = response[0];
                return Profile.fromJson(profileData);
@@ -33,7 +33,7 @@ class _UserProfileState extends State<UserProfile> {
 
    Future<bool> checkLoginStatus(request) async {
        try {
-           final response = await request.get('http://127.0.0.1:8000/is-logged-in-json/');
+           final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/is-logged-in-json/');
            return response['is_logged_in'];
        } catch (e) {
            return false;
@@ -281,7 +281,7 @@ class _UserProfileState extends State<UserProfile> {
                                                        const SizedBox(height: 20),
                                                        ElevatedButton.icon(
                                                            onPressed: () async {
-                                                               final response = await request.logout("http://127.0.0.1:8000/auth/logout/");
+                                                               final response = await request.logout("https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/auth/logout/");
                                                                String message = response["message"];
                                                                if (response['status']) {
                                                                    String uname = response["username"];

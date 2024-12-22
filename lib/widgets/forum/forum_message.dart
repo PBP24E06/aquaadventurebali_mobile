@@ -29,7 +29,7 @@ class ForumMessage extends StatelessWidget {
   Future<void> _deleteComment(BuildContext context) async {
     final request = context.read<CookieRequest>();
     final userId = request.jsonData?['user_id'];
-    final url = "http://127.0.0.1:8000/delete_discussion_mobile/$forum/";
+    final url = "https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/delete_discussion_mobile/$forum/";
 
     try {
       final response = await http.delete(

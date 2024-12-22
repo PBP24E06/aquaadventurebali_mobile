@@ -59,7 +59,7 @@ class _DiscussionFormState extends State<DiscussionForm> {
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
                     final response = await request.post(
-                      "http://127.0.0.1:8000/add_discussion_or_reply_mobile/${widget.productId}/",
+                      "https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/add_discussion_or_reply_mobile/${widget.productId}/",
                       jsonEncode(<String, dynamic>{
                         'parent_id': widget.parentCommentsId,
                         'user_id': userId,

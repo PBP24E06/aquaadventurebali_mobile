@@ -74,7 +74,7 @@ class _RequestAdminPageState extends State<RequestAdminPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final response = await request.post(
-                            'http://127.0.0.1:8000/request-admin-flutter/',
+                            'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/request-admin-flutter/',
                             jsonEncode({
                               'admin_password': _passwordController.text,
                             }),

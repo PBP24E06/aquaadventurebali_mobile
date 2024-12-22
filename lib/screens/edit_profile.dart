@@ -27,7 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> fetchProfile() async {
     final request = context.read<CookieRequest>();
-    final response = await request.get('http://127.0.0.1:8000/show-profile-json/');
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-profile-json/');
     
     if (response.isNotEmpty) {
       setState(() {

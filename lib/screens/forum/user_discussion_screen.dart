@@ -32,7 +32,7 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
   }
 
   Future<List<Map<String, dynamic>>> fetchUserDiscussions(CookieRequest request, int userId) async {
-    final response = await request.get("http://127.0.0.1:8000/show_user_discussion_mobile_json/$userId/");
+    final response = await request.get("https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show_user_discussion_mobile_json/$userId/");
 
     if (!response.containsKey('discussions')) {
       throw Exception("Key 'discussions' not found in the API response");

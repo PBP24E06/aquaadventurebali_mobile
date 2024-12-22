@@ -35,7 +35,7 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
   }
 
   Future<Map<int, List<Forum>>> fetchForum(CookieRequest request, String productId) async {
-    final response = await request.get("http://127.0.0.1:8000/show_mobile_forum_json/$productId/");
+    final response = await request.get("https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show_mobile_forum_json/$productId/");
     var data = jsonDecode(response["discussions"]);
     Map<int, List<Forum>> discussionMap = HashMap();
 

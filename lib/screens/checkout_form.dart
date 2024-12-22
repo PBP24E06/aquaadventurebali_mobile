@@ -23,7 +23,7 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
   String _phoneNumber = "";
 
   Future<Product> fetchProduct(CookieRequest request, String productId) async {
-    final response = await request.get('http://127.0.0.1:8000/json-product/$productId');
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/json-product/$productId');
 
     var data = response;
     
@@ -267,7 +267,7 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                           if (_formKey.currentState!.validate()) {
                               // Kirim ke Django dan tunggu respons
                               final response = await request.postJson(
-                                  "http://127.0.0.1:8000/checkout-flutter/${widget.productId}",
+                                  "https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/checkout-flutter/${widget.productId}",
                                   jsonEncode(<String, String>{
                                       'name': _fullName,
                                       'email': _email,

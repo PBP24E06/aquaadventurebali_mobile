@@ -14,7 +14,7 @@ class WishlistPage extends StatefulWidget {
 class _WishlistPageState extends State<WishlistPage> {
   Future<List<Product>> fetchWishlist(CookieRequest request) async {
     try {
-      final response = await request.get('http://127.0.0.1:8000/get-user-wishlist/');
+      final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/get-user-wishlist/');
       List<Product> listProduct = [];
       for (var d in response) {
         if (d != null) {
@@ -30,7 +30,7 @@ class _WishlistPageState extends State<WishlistPage> {
   Future<void> removeFromWishlist(CookieRequest request, String productId, BuildContext context) async {
     try {
       final response = await request.post(
-        'http://127.0.0.1:8000/remove-user-wishlist/$productId/',
+        'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/remove-user-wishlist/$productId/',
         {},
       );
 

@@ -15,7 +15,7 @@ class ProductDetailPage extends StatelessWidget {
   
   Future<List<Review>> fetchReviews(CookieRequest request) async {
     final response = await request.get(
-      'http://127.0.0.1:8000/show-json-review/${product.pk}'
+      'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-json-review/${product.pk}'
     );
     
     List<Review> listReview = [];
@@ -30,7 +30,7 @@ class ProductDetailPage extends StatelessWidget {
   Future<void> addToWishlist(CookieRequest request, BuildContext context) async {
     try {
       final response = await request.post(
-        'http://127.0.0.1:8000/add-wishlist-flutter/${product.pk}/',
+        'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/add-wishlist-flutter/${product.pk}/',
         {},
       );
 
