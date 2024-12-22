@@ -153,7 +153,7 @@ class _UserProfileState extends State<UserProfile> {
                                                                child: profile.fields.profilePicture.isNotEmpty
                                                                    ? ClipOval(
                                                                        child: Image.network(
-                                                                           "http://127.0.0.1:8000/static/ikon_botak/foto_ikon.jpg",
+                                                                           "https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/static/ikon_botak/foto_ikon.jpg",
                                                                            width: 100,
                                                                            height: 100,
                                                                            fit: BoxFit.cover,
