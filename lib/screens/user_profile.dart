@@ -1,4 +1,5 @@
 import 'package:aquaadventurebali_mobile/models/profile.dart';
+import 'package:aquaadventurebali_mobile/screens/edit_profile.dart';
 import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:aquaadventurebali_mobile/screens/register.dart';
@@ -221,7 +222,12 @@ class _UserProfileState extends State<UserProfile> {
                                                        ),
                                                        const SizedBox(height: 20),
                                                        ElevatedButton.icon(
-                                                           onPressed: () {},
+                                                           onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => EditProfilePage())
+                                                              );
+                                                           },
                                                            icon: const Icon(Icons.edit),
                                                            label: const Text('Edit Profile'),
                                                            style: ElevatedButton.styleFrom(
