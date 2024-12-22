@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:aquaadventurebali_mobile/models/forum.dart';
-import 'discussion_form.dart'; // Modular form widget
-import 'package:aquaadventurebali_mobile/widgets/forum/forum_message.dart'; // Modular message widget
+import 'discussion_form.dart';
+import 'package:aquaadventurebali_mobile/widgets/forum/forum_message.dart';
 
 class DiscussionPage extends StatefulWidget {
   final int? parentCommentsId;
@@ -27,7 +27,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
   @override
   void initState() {
     super.initState();
-    forumList = widget.forum; // Initialize with the provided forum list
+    forumList = widget.forum;
   }
 
   void _addNewComment(Forum newComment) {
@@ -36,91 +36,93 @@ class _DiscussionPageState extends State<DiscussionPage> {
     });
   }
 
+  void _deleteComment(int index) {
+    setState(() {
+      forumList.removeAt(index);
+      if (forumList.isEmpty) {
+        Navigator.pop(context); // Pop the page if all comments are deleted
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final uname = request.jsonData?['username']; // Fetch username dynamically
-    final userId = request.jsonData?['user_id']; // Fetch user ID dynamically
+    final uname = request.jsonData?['username'];
+    final userId = request.jsonData?['user_id'];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Diskusi Produk"),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
+        child: forumList.isEmpty
+            ? const Center(child: Text("Belum ada diskusi."))
+            : Column(
                 children: [
-                  // Parent comment at the top
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ForumMessage(
-                      userLoggedIn: userId,
-                      commentedUser: forumList[0].fields.user,
-                      forum: forumList[0].pk,
-                      avatarUrl: "https://via.placeholder.com/150",
-                      name: forumList[0].fields.commenterName,
-                      date:
-                          "${forumList[0].fields.createdAt.month}/${forumList[0].fields.createdAt.year}",
-                      message: forumList[0].fields.message,
-                      onDelete: () => setState(() {
-                        forumList.removeAt(0); // Remove the parent comment
-                      }),
-                    ),
-                  ),
-                  const Divider(color: Color.fromARGB(255, 222, 221, 221), height: 1, thickness: 1),
-                  // Section header for replies
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
-                    child: Text(
-                      "Jawaban (${forumList.length - 1})",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  // Replies content
-                  ...forumList.skip(1).map((reply) {
-                    return Column(
+                  Expanded(
+                    child: ListView(
                       children: [
+                        // Parent comment
+                        ForumMessage(
+                          userLoggedIn: userId,
+                          commentedUser: forumList[0].fields.user,
+                          forum: forumList[0].pk,
+                          avatarUrl: "https://via.placeholder.com/150",
+                          name: forumList[0].fields.commenterName,
+                          date:
+                              "${forumList[0].fields.createdAt.month}/${forumList[0].fields.createdAt.year}",
+                          message: forumList[0].fields.message,
+                          onDelete: () {
+                            _deleteComment(0); // Delete the parent comment
+                          },
+                        ),
+                        const Divider(color: Colors.grey, thickness: 1),
+                        // Replies
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                          child: ForumMessage(
-                            userLoggedIn: userId,
-                            commentedUser: reply.fields.user,
-                            forum: reply.pk,
-                            avatarUrl: "https://via.placeholder.com/150",
-                            name: reply.fields.commenterName,
-                            date:
-                                "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
-                            message: reply.fields.message,
-                            onDelete: () => setState(() {
-                              forumList.remove(reply); // Remove the reply
-                            }),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Jawaban (${forumList.length - 1})",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        const Divider(color: Color.fromARGB(255, 222, 221, 221), height: 1, thickness: 1),
+                        ...forumList.skip(1).map((reply) {
+                          final index = forumList.indexOf(reply);
+                          return Column(
+                            children: [
+                              ForumMessage(
+                                userLoggedIn: userId,
+                                commentedUser: reply.fields.user,
+                                forum: reply.pk,
+                                avatarUrl: "https://via.placeholder.com/150",
+                                name: reply.fields.commenterName,
+                                date:
+                                    "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
+                                message: reply.fields.message,
+                                onDelete: () {
+                                  _deleteComment(index); // Delete a reply
+                                },
+                              ),
+                              const Divider(color: Colors.grey, thickness: 1),
+                            ],
+                          );
+                        }),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                  ),
+                  // Comment form
+                  if (uname != null)
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      color: Colors.white,
+                      child: DiscussionForm(
+                        productId: widget.productId,
+                        parentCommentsId: widget.parentCommentsId,
+                        onCommentAdded: _addNewComment,
+                      ),
+                    ),
                 ],
               ),
-            ),
-            // Fixed comment input form at the bottom
-            if (uname != null)
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(8.0),
-                child: DiscussionForm(
-                  productId: widget.productId,
-                  parentCommentsId: widget.parentCommentsId,
-                  onCommentAdded: _addNewComment, // Pass the callback
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }
