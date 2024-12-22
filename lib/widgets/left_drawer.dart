@@ -64,18 +64,18 @@ class LeftDrawer extends StatelessWidget {
                   );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.add_shopping_cart),
-              title: const Text('Tes checkout form'),
-              // Bagian redirection ke MyHomePage
-              onTap: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CheckoutFormPage(productId: "7d722d4a-9cdd-4292-820e-4a8aad50fe32"),
-                    ));
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.add_shopping_cart),
+            //   title: const Text('Tes checkout form'),
+            //   // Bagian redirection ke MyHomePage
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const CheckoutFormPage(),
+            //         ));
+            //   },
+            // ),
         ],
       ),
     );

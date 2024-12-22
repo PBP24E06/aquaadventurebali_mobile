@@ -78,11 +78,10 @@ class _AllReviewPageState extends State<AllReviewPage> {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      "http://127.0.0.1:8000/${widget.productImage}",  // Add productImage to your widget parameters
+                    child: Image(
+                      image: AssetImage(widget.productImage),
                       height: 200,
                       width: double.infinity,
-                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           height: 200,

@@ -41,6 +41,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App memerlukan akses ke galeri untuk memilih gambar.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>App memerlukan akses ke kamera untuk mengambil gambar.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>App memerlukan akses ke mikrofon.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
