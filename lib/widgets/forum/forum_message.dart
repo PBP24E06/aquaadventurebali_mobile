@@ -92,7 +92,7 @@ class ForumMessage extends StatelessWidget {
                 return CircleAvatar(
                   radius: 15,
                   backgroundImage: NetworkImage(
-                    "http://127.0.0.1:8000/static/${snapshot.data!.fields.profilePicture}",
+                    "assets/${snapshot.data!.fields.profilePicture}",
                   ),
                 );
               }
