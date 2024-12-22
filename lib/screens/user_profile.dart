@@ -1,5 +1,6 @@
 import 'package:aquaadventurebali_mobile/models/profile.dart';
 import 'package:aquaadventurebali_mobile/screens/edit_profile.dart';
+import 'package:aquaadventurebali_mobile/screens/forum/user_discussion_screen.dart';
 import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:aquaadventurebali_mobile/screens/register.dart';
@@ -220,6 +221,18 @@ class _UserProfileState extends State<UserProfile> {
                                                            'Tanggal Bergabung',
                                                            profile.fields.dateJoined.toString(),
                                                        ),
+                                                       const SizedBox(height: 20),
+                                                       ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => const UserDiscussionScreen()),
+                                                          );
+                                                        },
+                                                        child: const Text("My Discussions"),
+                                                      ),
+
+
                                                        const SizedBox(height: 20),
                                                        ElevatedButton.icon(
                                                            onPressed: () {

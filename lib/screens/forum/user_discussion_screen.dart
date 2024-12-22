@@ -133,7 +133,6 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
                       Padding(
                         padding: EdgeInsets.only(left: 30.0, bottom: 15.0),
                         child: ForumMessage(
-                          avatarUrl: "https://via.placeholder.com/150",
                           name: discussion.fields.commenterName,
                           date: "${discussion.fields.createdAt.month}/${discussion.fields.createdAt.year}",
                           message: discussion.fields.message,
