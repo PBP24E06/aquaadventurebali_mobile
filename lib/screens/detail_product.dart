@@ -9,7 +9,7 @@ class ProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // URL gambar
-    String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
+    // String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
 
     return Scaffold(
       appBar: AppBar(

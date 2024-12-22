@@ -46,6 +46,11 @@ Future<void> _deleteProduct(int id) async {
     }
   }
 
+Future<bool> isAdmin(CookieRequest request) async {
+  final response = await request.get('http://127.0.0.1:8000/user-status/');
+  return response['is_admin'];
+}
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
@@ -57,29 +62,38 @@ Future<void> _deleteProduct(int id) async {
       body: Column(
         children: [
           // Tambahkan tombol Add Product di atas sebelum card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Navigasi ke halaman tambah produk
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+          FutureBuilder(
+            future: isAdmin(request), // Mengecek apakah admin
+            builder: (context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData && snapshot.data == true) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigasi ke halaman tambah produk
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Add Product",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                "Add Product",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+              } else {
+                return const SizedBox.shrink(); // Jangan tampilkan apa-apa
+              }
+            },
           ),
           // Bagian untuk menampilkan daftar produk
           Expanded(
@@ -192,20 +206,28 @@ Future<void> _deleteProduct(int id) async {
                                           ),
                                           child: const Text("Beli"),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Panggil fungsi untuk menghapus produk
-                                            _deleteProduct(product.id);
+                                        FutureBuilder(
+                                          future: isAdmin(request),
+                                          builder: (context, AsyncSnapshot<bool> snapshot) {
+                                            if (snapshot.hasData && snapshot.data == true) {
+                                              return ElevatedButton(
+                                                onPressed: () {
+                                                  // Panggil fungsi untuk menghapus produk
+                                                  _deleteProduct(product.id);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                  backgroundColor: Colors.red,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                ),
+                                                child: const Text("Delete"),
+                                              );
+                                            } else {
+                                              return const SizedBox.shrink();
+                                            }
                                           },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 8),
-                                            backgroundColor: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text("Delete"),
                                         ),
                                       ],
                                     ),
