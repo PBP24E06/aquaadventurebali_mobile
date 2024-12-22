@@ -63,7 +63,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
                       avatarUrl: "https://via.placeholder.com/150",
                       name: parentComment.fields.commenterName,
                       date:
-                          "${parentComment.fields.createdAt.month} ${parentComment.fields.createdAt.year}",
+                          "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
                       message: parentComment.fields.message,
                       onDelete: () => setState(() {
                         forumList.removeAt(0); // Remove the parent comment
@@ -73,9 +73,9 @@ class _DiscussionPageState extends State<DiscussionPage> {
                   const Divider(),
                   // Section header for replies
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                     child: Text(
-                      "Jawaban (${forumList.length - 1})",
+                      "Jawaban (${replies.length})",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -94,7 +94,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
                         avatarUrl: "https://via.placeholder.com/150",
                         name: reply.fields.commenterName,
                         date:
-                            "${reply.fields.createdAt.month} ${reply.fields.createdAt.year}",
+                            "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
                         message: reply.fields.message,
                         onDelete: () => setState(() {
                           forumList.remove(reply); // Remove the reply

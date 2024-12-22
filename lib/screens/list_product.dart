@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:aquaadventurebali_mobile/screens/productentry_form.dart';
+import 'package:http/http.dart' as http;
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -12,21 +14,34 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  Future<List<Product>> fetchMood(CookieRequest request) async {
-    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+  Future<List<Product>> fetchProducts(CookieRequest request) async {
     final response = await request.get('http://127.0.0.1:8000/json-product/');
-    
-    // Melakukan decode response menjadi bentuk json
     var data = response;
-    
-    // Melakukan konversi data json menjadi object Product
-    List<Product> listMood = [];
+
+    List<Product> productList = [];
     for (var d in data) {
       if (d != null) {
-        listMood.add(Product.fromJson(d));
+        productList.add(Product.fromJson(d));
       }
     }
-    return listMood;
+    return productList;
+  }
+
+Future<void> _deleteProduct(int id) async {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:8000/delete-flutter/$id/'),
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Produk berhasil dihapus!')),
+      );
+      _ProductPageState(); // Refresh data produk
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal menghapus produk!')),
+      );
+    }
   }
 
   @override
@@ -36,58 +51,168 @@ class _ProductPageState extends State<ProductPage> {
       appBar: AppBar(
         title: const Text('Product Entry List'),
       ),
-      drawer: const LeftDrawer(),
-      body: FutureBuilder(
-        future: fetchMood(request),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if (!snapshot.hasData) {
-              return const Column(
-                children: [
-                  Text(
-                    'Belum ada data produk pada Aqua Adventure Bali.',
-                    style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) => Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${snapshot.data![index].fields.name}",
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.kategori}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.harga}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.toko}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.alamat}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.kontak}")
-                    ],
-                  ),
+      // drawer: const LeftDrawer(),
+      body: Column(
+        children: [
+          // Tambahkan tombol Add Product di atas sebelum card
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // Navigasi ke halaman tambah produk
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              );
-            }
-          }
-        },
+              ),
+              child: const Text(
+                "Add Product",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          // Bagian untuk menampilkan daftar produk
+          Expanded(
+            child: FutureBuilder(
+              future: fetchProducts(request),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text(
+                        'Belum ada data produk pada Aqua Adventure Bali.',
+                        style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
+                      ),
+                    );
+                  } else {
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 2 / 3,
+                      ),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (_, index) {
+                        final product = snapshot.data![index].fields;
+                        String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
+
+                        return Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12)),
+                                child: Image.network(
+                                  imageUrl,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Center(
+                                        child: Text('Gambar gagal dimuat.'));
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      product.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "Rp ${product.harga}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Aksi untuk detail produk
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                            backgroundColor: Colors.blue,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text("Detail"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Aksi untuk membeli produk
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                            backgroundColor: Colors.orange,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text("Beli"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Panggil fungsi untuk menghapus produk
+                                            _deleteProduct(product.id);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                            backgroundColor: Colors.red,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text("Delete"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

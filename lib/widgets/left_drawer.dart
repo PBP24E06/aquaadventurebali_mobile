@@ -2,11 +2,12 @@ import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/screens/list_product.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
-import 'package:aquaadventurebali_mobile/screens/login.dart';
 //import 'package:aquaadventurebali_mobile/screens/productentry_form.dart';
 
 class LeftDrawer extends StatelessWidget {
-  const LeftDrawer({super.key});
+  final String uname;
+  final int userId;
+  const LeftDrawer(this.uname, this.userId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +66,18 @@ class LeftDrawer extends StatelessWidget {
                   );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.add_shopping_cart),
-              title: const Text('Tes checkout form'),
-              // Bagian redirection ke MyHomePage
-              onTap: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CheckoutFormPage(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
-                    ));
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.add_shopping_cart),
+            //   title: const Text('Tes checkout form'),
+            //   // Bagian redirection ke MyHomePage
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const CheckoutFormPage(),
+            //         ));
+            //   },
+            // ),
         ],
       ),
     );

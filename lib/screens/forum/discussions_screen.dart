@@ -14,8 +14,7 @@ class DiscussionScreens extends StatefulWidget {
   final String? uname;
   final int userId;
 
-  const DiscussionScreens(this.uname, this.userId, {Key? key, required this.productId})
-      : super(key: key);
+  const DiscussionScreens(this.uname, this.userId, {Key? key, required this.productId}) : super(key: key);
 
   @override
   State<DiscussionScreens> createState() => _DiscussionScreensState();
@@ -77,7 +76,7 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
               onPressed: () => setState(() => _fetchData()),
             ),
           ],
@@ -135,6 +134,7 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
                             final entry = discussions.entries.elementAt(index);
                             final parentComment = entry.value[0];
                             final replies = entry.value.sublist(1);
+                            final firstReply = replies.isNotEmpty ? replies[0] : null;
                             final remainingRepliesCount = replies.length > 1 ? replies.length - 1 : 0;
 
                             return Column(
@@ -160,39 +160,29 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                "https://via.placeholder.com/150",
-                                              ),
-                                              radius: 20,
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              parentComment.fields.commenterName,
-                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
-                                              style: TextStyle(color: Colors.grey),
-                                            ),
-                                          ],
+                                        ForumMessage(
+                                          avatarUrl: "https://via.placeholder.com/150",
+                                          name: parentComment.fields.commenterName,
+                                          date: "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
+                                          message: parentComment.fields.message,
+                                          userLoggedIn: widget.userId,
+                                          commentedUser: parentComment.fields.user,
+                                          forum: parentComment.pk,
+                                          onDelete: () {
+                                            setState(() => _fetchData());
+                                          },
                                         ),
-                                        const SizedBox(height: 8),
-                                        Text(parentComment.fields.message),
-                                        if (replies.isNotEmpty)
+                                        if (firstReply != null)
                                           Padding(
                                             padding: const EdgeInsets.only(left: 30.0, top: 10.0),
                                             child: ForumMessage(
                                               avatarUrl: "https://via.placeholder.com/150",
-                                              name: replies[0].fields.commenterName,
-                                              date: "${replies[0].fields.createdAt.month}/${replies[0].fields.createdAt.year}",
-                                              message: replies[0].fields.message,
+                                              name: firstReply.fields.commenterName,
+                                              date: "${firstReply.fields.createdAt.month}/${firstReply.fields.createdAt.year}",
+                                              message: firstReply.fields.message,
                                               userLoggedIn: widget.userId,
-                                              commentedUser: replies[0].fields.user,
-                                              forum: replies[0].pk,
+                                              commentedUser: firstReply.fields.user,
+                                              forum: firstReply.pk,
                                               onDelete: () {
                                                 setState(() => _fetchData());
                                               },
@@ -228,7 +218,7 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
                     },
                   ),
                 ),
-                if (widget.uname != null)
+                if (widget.userId != 0)
                   Container(
                     color: Colors.white,
                     padding: const EdgeInsets.all(8.0),

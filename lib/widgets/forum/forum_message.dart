@@ -1,8 +1,6 @@
-// forum_message.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:http/http.dart' as http;
 
 class ForumMessage extends StatelessWidget {
   final String avatarUrl;
@@ -26,10 +24,38 @@ class ForumMessage extends StatelessWidget {
     required this.onDelete,
   }) : super(key: key);
 
+  Future<void> _deleteComment(BuildContext context) async {
+    final url = "http://127.0.0.1:8000/delete_discussion/$forum/";
+
+    try {
+      final response = await http.delete(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData["message"] == "Discussion deleted successfully.") {
+          onDelete(); // Call the onDelete callback
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Komentar berhasil dihapus")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Gagal menghapus komentar")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Gagal menghapus komentar")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Terjadi kesalahan: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final request = context.watch<CookieRequest>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0), // Adjust padding for spacing
       child: Row(
@@ -77,7 +103,7 @@ class ForumMessage extends StatelessWidget {
                               builder: (context) {
                                 return AlertDialog(
                                   title: const Text("Hapus Komentar"),
-                                  content: const Text("Apakah Anda ingin menghapus komentar ini?"),
+                                  content: const Text("Apakah Anda yakin ingin menghapus komentar ini?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -87,29 +113,8 @@ class ForumMessage extends StatelessWidget {
                                     ),
                                     ElevatedButton(
                                       onPressed: () async {
-                                        final response = await request.post(
-                                          "http://127.0.0.1:8000/delete_comments_mobile/",
-                                          jsonEncode(<String, int>{
-                                            'commentId': forum,
-                                          }),
-                                        );
-
-                                        if (response["status"] == "success") {
-                                          onDelete(); // Call the onDelete callback
-                                          Navigator.pop(context);
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text("Komentar berhasil dihapus"),
-                                            ),
-                                          );
-                                        } else {
-                                          Navigator.pop(context);
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text("Gagal menghapus komentar"),
-                                            ),
-                                          );
-                                        }
+                                        Navigator.pop(context);
+                                        await _deleteComment(context);
                                       },
                                       child: const Text("Hapus Komentar"),
                                     ),

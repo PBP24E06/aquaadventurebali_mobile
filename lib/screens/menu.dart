@@ -1,44 +1,44 @@
+import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/transaction_history.dart';
 import 'package:aquaadventurebali_mobile/screens/forum/discussions_screen.dart';
-import 'package:aquaadventurebali_mobile/screens/user_profile.dart';
+import 'package:aquaadventurebali_mobile/screens/user_profile/user_profile.dart';
 import 'package:aquaadventurebali_mobile/screens/whislist.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:aquaadventurebali_mobile/screens/list_product.dart';
 
-class MyHomePage extends StatefulWidget{
-  String uname = "";
-  int userid;
-  MyHomePage(this.uname, this.userid, {super.key});
+class MyHomePage extends StatefulWidget {
+  final String uname;
+  final int userId;
+
+  const MyHomePage({this.uname = "Guest", this.userId = 0, super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-  
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final key = GlobalKey();
   int _screenIndex = 0;
-
-  // Remove body initialization here
-  List<Widget> body = [];
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the body list dynamically inside build()
-    body = [
-      DiscussionScreens(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9", widget.uname, widget.userid),
-      TransactionHistory(),
+    // Body screens to display for each tab
+    final List<Widget> body = [
+      ProductPage(),
+      TransactionHistoryPage(),
       Whislist(),
       CheckoutFormPage(productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
-      UserProfile(),
+      UserProfileWidget(uname: widget.uname, userId: widget.userId),
+      DiscussionScreens(widget.uname, widget.userId, productId: "47fe41cc-d4bb-43cd-802c-c7383014a6a9"),
     ];
 
     return Scaffold(
-      body: body[_screenIndex],
+      body: IndexedStack(
+        index: _screenIndex,
+        children: body,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color(0xFF1F2937),
+        backgroundColor: const Color(0xFF1F2937),
         currentIndex: _screenIndex,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
@@ -67,10 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
             label: 'Akun',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'DiscussionPage',
           ),
         ],
       ),

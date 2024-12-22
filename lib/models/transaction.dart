@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-Transaction transactionFromJson(String str) => Transaction.fromJson(json.decode(str));
+List<Transaction> transactionFromJson(String str) => List<Transaction>.from(json.decode(str).map((x) => Transaction.fromJson(x)));
 
-String transactionToJson(Transaction data) => json.encode(data.toJson());
+String transactionToJson(List<Transaction> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Transaction {
     String model;
