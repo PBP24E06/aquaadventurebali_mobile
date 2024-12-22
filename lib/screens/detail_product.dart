@@ -9,7 +9,7 @@ class ProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // URL gambar
-    String imageUrl = "assets/${product.gambar}";
+    String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
 
     return Scaffold(
       appBar: AppBar(
@@ -21,24 +21,24 @@ class ProductDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Gambar Produk
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 300,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: double.infinity,
-                    height: 300,
-                    color: Colors.grey[300],
-                    child: const Center(child: Text('Gambar tidak tersedia')),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(12),
+            //   child: Image.network(
+            //     imageUrl,
+            //     fit: BoxFit.cover,
+            //     width: double.infinity,
+            //     height: 300,
+            //     // errorBuilder: (context, error, stackTrace) {
+            //     //   return Container(
+            //     //     width: double.infinity,
+            //     //     height: 300,
+            //     //     color: Colors.grey[300],
+            //     //     child: const Center(child: Text('Gambar tidak tersedia')),
+            //     //   );
+            //     // },
+            //   ),
+            // ),
+            // const SizedBox(height: 16),
 
             // Nama Produk
             Text(

@@ -107,7 +107,7 @@ Future<void> _deleteProduct(int id) async {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
-                        String imageUrl = "assets/${product.gambar}";
+                        // String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
 
                         return Card(
                           elevation: 4,
@@ -117,14 +117,14 @@ Future<void> _deleteProduct(int id) async {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(12)),
-                                child: Image.network(
-                                  imageUrl,
+                              // ClipRRect(
+                              //   borderRadius: const BorderRadius.vertical(
+                              //       top: Radius.circular(12)),
+                              //   child: Image.network(
+                              //     imageUrl,
                                   
-                                ),
-                              ),
+                              //   ),
+                              // ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
