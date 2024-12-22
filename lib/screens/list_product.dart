@@ -1,4 +1,3 @@
-import 'package:aquaadventurebali_mobile/screens/all_review.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
@@ -175,9 +174,12 @@ Future<void> _deleteProduct(int id) async {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            Navigator.push(context, MaterialPageRoute(
-                                              builder: (context) => CheckoutFormPage(productId: snapshot.data![index].pk)
-                                              )
+                                            // Aksi untuk membeli produk
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => CheckoutFormPage(productId: snapshot.data![index].pk),
+                                              ),
                                             );
                                           },
                                           style: ElevatedButton.styleFrom(
