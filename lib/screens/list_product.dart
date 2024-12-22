@@ -29,7 +29,7 @@ class _ProductPageState extends State<ProductPage> {
     return productList;
   }
 
-Future<void> _deleteProduct(int id) async {
+Future<void> _deleteProduct(String id) async {
     final response = await http.delete(
       Uri.parse('http://127.0.0.1:8000/delete-flutter/$id/'),
     );
@@ -38,13 +38,21 @@ Future<void> _deleteProduct(int id) async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produk berhasil dihapus!')),
       );
-      _ProductPageState(); // Refresh data produk
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProductPage()),
+      ); // Refresh data produk
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus produk!')),
       );
     }
   }
+
+Future<bool> isAdmin(CookieRequest request) async {
+  final response = await request.get('http://127.0.0.1:8000/user-status/');
+  return response['is_admin'];
+}
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +65,38 @@ Future<void> _deleteProduct(int id) async {
       body: Column(
         children: [
           // Tambahkan tombol Add Product di atas sebelum card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Navigasi ke halaman tambah produk
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+          FutureBuilder(
+            future: isAdmin(request), // Mengecek apakah admin
+            builder: (context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData && snapshot.data == true) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigasi ke halaman tambah produk
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Add Product",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                "Add Product",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+              } else {
+                return const SizedBox.shrink(); // Jangan tampilkan apa-apa
+              }
+            },
           ),
           // Bagian untuk menampilkan daftar produk
           Expanded(
@@ -108,7 +125,8 @@ Future<void> _deleteProduct(int id) async {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
-                        String imageUrl = "assets/${product.gambar}";
+                        final pk = snapshot.data![index].pk;
+                        // String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
 
                         return Card(
                           elevation: 4,
@@ -118,14 +136,14 @@ Future<void> _deleteProduct(int id) async {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(12)),
-                                child: Image.network(
-                                  imageUrl,
+                              // ClipRRect(
+                              //   borderRadius: const BorderRadius.vertical(
+                              //       top: Radius.circular(12)),
+                              //   child: Image.network(
+                              //     imageUrl,
                                   
-                                ),
-                              ),
+                              //   ),
+                              // ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -158,7 +176,7 @@ Future<void> _deleteProduct(int id) async {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields),
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields, pk: pk,),
                                               ),
                                             );
                                           },
@@ -192,20 +210,28 @@ Future<void> _deleteProduct(int id) async {
                                           ),
                                           child: const Text("Beli"),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Panggil fungsi untuk menghapus produk
-                                            _deleteProduct(product.id);
+                                        FutureBuilder(
+                                          future: isAdmin(request),
+                                          builder: (context, AsyncSnapshot<bool> snapshot) {
+                                            if (snapshot.hasData && snapshot.data == true) {
+                                              return ElevatedButton(
+                                                onPressed: () {
+                                                  // Panggil fungsi untuk menghapus produk
+                                                  _deleteProduct(pk);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                  backgroundColor: Colors.red,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                ),
+                                                child: const Text("Delete"),
+                                              );
+                                            } else {
+                                              return const SizedBox.shrink();
+                                            }
                                           },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 8),
-                                            backgroundColor: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text("Delete"),
                                         ),
                                       ],
                                     ),
