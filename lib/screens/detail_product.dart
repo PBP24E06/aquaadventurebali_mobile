@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
+import 'package:aquaadventurebali_mobile/screens/edit_product.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Fields product;
+  final String pk;
 
-  const ProductDetailPage({super.key, required this.product});
+  const ProductDetailPage({super.key, required this.product, required this.pk});
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +146,33 @@ class ProductDetailPage extends StatelessWidget {
                 ),
               ),
             ),
+            // Tombol Edit Produk
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigasi ke halaman EditProductPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProductPage(product: product, pk:pk),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  backgroundColor: Colors.yellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Edit Produk",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
           ],
         ),
       ),

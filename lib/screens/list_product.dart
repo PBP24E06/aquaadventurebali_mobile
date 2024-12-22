@@ -29,7 +29,7 @@ class _ProductPageState extends State<ProductPage> {
     return productList;
   }
 
-Future<void> _deleteProduct(int id) async {
+Future<void> _deleteProduct(String id) async {
     final response = await http.delete(
       Uri.parse('http://127.0.0.1:8000/delete-flutter/$id/'),
     );
@@ -38,7 +38,10 @@ Future<void> _deleteProduct(int id) async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produk berhasil dihapus!')),
       );
-      _ProductPageState(); // Refresh data produk
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProductPage()),
+      ); // Refresh data produk
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus produk!')),
@@ -122,6 +125,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
+                        final pk = snapshot.data![index].pk;
                         // String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
 
                         return Card(
@@ -172,7 +176,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields),
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields, pk: pk,),
                                               ),
                                             );
                                           },
@@ -213,7 +217,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                                               return ElevatedButton(
                                                 onPressed: () {
                                                   // Panggil fungsi untuk menghapus produk
-                                                  _deleteProduct(product.id);
+                                                  _deleteProduct(pk);
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
