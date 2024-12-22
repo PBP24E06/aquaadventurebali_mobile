@@ -9,7 +9,7 @@
 * Rifqisyandi Khairurrizal - 2306152216
 
 ## Tautan APK
-https://install.appcenter.ms/orgs/pbp24e06/apps/aqua-adventure-bali/distribution_groups/public/releases/1
+https://install.appcenter.ms/orgs/pbp24e06/apps/aqua-adventure-bali/distribution_groups/public/releases/3  (yang rilis di Dec 23, 2024 at 00:18)
 
 ## Deskripsi Aplikasi
 Aqua Adventure Bali adalah mobile aplikasi untuk mencari informasi mengenai peralatan snorkeling dan toko yang menjualnya di Bali. Kami mendapat inspirasi karena Bali merupakan salah satu destinasi wisata di Indonesia yang terkenal sampai ke mancanegara dan di Bali terdapat banyak sekali pantai yang menyediakan wisata untuk snorkeling. Aplikasi ini bermanfaat bagi para wisatawan ataupun warga lokal Bali yang memiliki minat dalam olahraga snorkeling untuk mencari informasi mengenai peralatan snorkeling serta tempat menjualnya.
