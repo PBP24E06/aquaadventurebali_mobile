@@ -1,5 +1,4 @@
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
-import 'package:aquaadventurebali_mobile/widgets/left_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -59,9 +58,10 @@ Future<bool> isAdmin(CookieRequest request) async {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Entry List'),
+        title: const Text('Aqua Adventure Bali'),
+        backgroundColor: const Color(0xFF0F172A),
+        foregroundColor: Colors.white,
       ),
-      drawer: const LeftDrawer(),
       body: Column(
         children: [
           // Tambahkan tombol Add Product di atas sebelum card
@@ -126,7 +126,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
                         final pk = snapshot.data![index].pk;
-                        // String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
+                        String imageUrl = "assets/${product.gambar}";
 
                         return Card(
                           elevation: 4,
@@ -136,14 +136,14 @@ Future<bool> isAdmin(CookieRequest request) async {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // ClipRRect(
-                              //   borderRadius: const BorderRadius.vertical(
-                              //       top: Radius.circular(12)),
-                              //   child: Image.network(
-                              //     imageUrl,
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12)),
+                                child: Image.network(
+                                  imageUrl,
                                   
-                              //   ),
-                              // ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -176,7 +176,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields, pk: pk,),
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index]),
                                               ),
                                             );
                                           },

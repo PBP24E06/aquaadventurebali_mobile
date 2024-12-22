@@ -1,7 +1,9 @@
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:aquaadventurebali_mobile/models/transaction.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
+import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
+import 'package:aquaadventurebali_mobile/screens/review_form.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -32,6 +34,19 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
     return listTransaction;
   }
 
+  Future<bool> hasUserReviewed(CookieRequest request, String productId) async {
+    try {
+      final response = await request.get(
+        'http://127.0.0.1:8000/has-user-reviewed-json/$productId/',
+      );
+
+      return response['has_reviewed'] ?? false;
+    } catch (e) {
+
+      return false;
+    }
+  }
+
   Future<Product> fetchProduct(CookieRequest request, String productId) async{
     final response = await request.get('http://127.0.0.1:8000/json-product/$productId');
 
@@ -50,6 +65,19 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
+    if (!request.loggedIn) {
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage())
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator())
+      );
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaction History'),
@@ -227,42 +255,88 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                   alignment: Alignment.bottomRight,
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
-
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white, // Warna teks tombol
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0), 
-                                          side: const BorderSide(
-                                            color: Colors.green, // Warna border
-                                            width: 1.0, // Ketebalan border
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        FutureBuilder(
+                                          future: hasUserReviewed(request, snapshot.data![index].fields.product),
+                                          builder: (context, AsyncSnapshot<bool> reviewSnapshot) {
+                                            return ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  side: BorderSide(
+                                                    color: (reviewSnapshot.data ?? false) ? Colors.grey : Colors.blue,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                elevation: 2,
+                                                fixedSize: const Size(110, 35), 
+                                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                              ),
+                                              onPressed: (reviewSnapshot.data ?? false) ? null : () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ReviewFormPage(
+                                                      productId: snapshot.data![index].fields.product,
+                                                      productName: productSnapshot.data!.fields.name,
+                                                      productImage: productSnapshot.data!.fields.gambar,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text(
+                                                (reviewSnapshot.data ?? false) ? "Already Reviewed!" : "Write Review",
+                                                style: GoogleFonts.sourceSans3(
+                                                  fontSize: 12.0,
+                                                  color: (reviewSnapshot.data ?? false) ? Colors.grey : Colors.blue,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              side: const BorderSide(
+                                                color: Colors.green,
+                                                width: 1.0,
+                                              ),
+                                            ),
+                                            elevation: 2,
+                                            fixedSize: const Size(90, 35),
+                                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => CheckoutFormPage(
+                                                  productId: snapshot.data![index].fields.product,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            "Beli Lagi",
+                                            style: GoogleFonts.sourceSans3(
+                                              fontSize: 12.0,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
-                                        elevation: 2, // Efek bayangan tombol
-                                        fixedSize: Size(90, 35), 
-                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => CheckoutFormPage(productId: snapshot.data![index].fields.product),
-                                          ),
-                                        );
-                                      },
-                                             
-                                      child: Text(
-                                        "Beli Lagi",
-                                        style: GoogleFonts.sourceSans3(
-                                          fontSize: 12.0,
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                      ],
                                     ),
                                   ),
-                                ),    
+                                ), 
                               ]
                             );
                           }

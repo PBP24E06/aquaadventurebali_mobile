@@ -2,7 +2,7 @@ import 'package:aquaadventurebali_mobile/screens/checkout.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/transaction_history.dart';
 import 'package:aquaadventurebali_mobile/screens/user_profile.dart';
-import 'package:aquaadventurebali_mobile/screens/whislist.dart';
+import 'package:aquaadventurebali_mobile/screens/wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:aquaadventurebali_mobile/screens/list_product.dart';
@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> body = [
     ProductPage(),
     TransactionHistoryPage(),
-    Whislist(),
+    WishlistPage(),
     UserProfile(),
   ];
 
