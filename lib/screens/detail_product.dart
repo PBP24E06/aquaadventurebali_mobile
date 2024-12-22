@@ -221,10 +221,13 @@ class ProductDetailPage extends StatelessWidget {
               children: [
                 Icon(Icons.location_on),
                 const SizedBox(width: 4),
-                Text(
-                  product.fields.alamat,
-                  style: const TextStyle(fontSize: 12),
-                ),  
+                Expanded(
+                  
+                  child: Text(
+                    product.fields.alamat,
+                    style: const TextStyle(fontSize: 12),
+                  ),  
+                )
               ],
             ),
             const SizedBox(height: 16),
