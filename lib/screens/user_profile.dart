@@ -114,6 +114,8 @@ class _UserProfileState extends State<UserProfile> {
        return Scaffold(
            appBar: AppBar(
                title: const Text('Profile'),
+                backgroundColor: const Color(0xFF0F172A),
+                foregroundColor: Colors.white,
            ),
            body: FutureBuilder<bool>(
                future: checkLoginStatus(request),

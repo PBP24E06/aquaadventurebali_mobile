@@ -38,7 +38,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
   Future<bool> hasUserReviewed(CookieRequest request, String productId) async {
     try {
       final response = await request.get(
-        'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/viewed-json/$productId/',
+        'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/has-user-reviewed-json/$productId/',
       );
 
       return response['has_reviewed'] ?? false;
@@ -94,6 +94,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaction History'),
+        backgroundColor: const Color(0xFF0F172A),
+        foregroundColor: Colors.white,
       ),
       body: FutureBuilder(
         future: fetchTransactionHistory(request),

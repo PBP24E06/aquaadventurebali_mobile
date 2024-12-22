@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:aquaadventurebali_mobile/models/profile.dart';
 
 class ForumMessage extends StatelessWidget {
-  final String avatarUrl;
   final String name;
   final String date;
   final String message;
@@ -16,7 +16,6 @@ class ForumMessage extends StatelessWidget {
 
   const ForumMessage({
     Key? key,
-    required this.avatarUrl,
     required this.name,
     required this.date,
     required this.message,
@@ -34,15 +33,13 @@ class ForumMessage extends StatelessWidget {
     try {
       final response = await http.delete(
         Uri.parse(url),
-        body: jsonEncode({
-          'user_id': userId,
-        }),
-        );
+        body: jsonEncode({'user_id': userId}),
+      );
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         if (responseData["message"] == "Discussion deleted successfully.") {
-          onDelete(); // Call the onDelete callback
+          onDelete();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Komentar berhasil dihapus")),
           );
@@ -63,45 +60,62 @@ class ForumMessage extends StatelessWidget {
     }
   }
 
+  Future<Profile?> fetchProfile(CookieRequest request, int userId) async {
+    try {
+      final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-profile-by-id-json/$userId');
+      if (response is List && response.isNotEmpty) {
+        return Profile.fromJson(response[0]);
+      }
+    } catch (e) {
+      // Log error or handle fallback
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0), // Adjust padding for spacing
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile Picture
-          CircleAvatar(
-            radius: 15, // CircleAvatar size
-            backgroundImage: NetworkImage(avatarUrl),
+          FutureBuilder<Profile?>(
+            future: fetchProfile(request, commentedUser),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircleAvatar(radius: 15, backgroundColor: Colors.grey);
+              } else if (snapshot.hasError || !snapshot.hasData || snapshot.data?.fields.profilePicture == null) {
+                return const CircleAvatar(radius: 15, child: Icon(Icons.person), backgroundColor: Colors.grey);
+              } else {
+                return CircleAvatar(
+                  radius: 15,
+                  backgroundImage: NetworkImage(
+                    "http://127.0.0.1:8000/static/${snapshot.data!.fields.profilePicture}",
+                  ),
+                );
+              }
+            },
           ),
-          const SizedBox(width: 6), // Space between avatar and text
-          // Text content
+          const SizedBox(width: 12), // Increase the spacing between the avatar and the name
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Name and Date Row
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center, // Align items vertically
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    const SizedBox(width: 6), // Adjust spacing between name and date
+                    const SizedBox(width: 6),
                     Text(
                       date,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const Spacer(),
-                    // PopupMenu for delete option
                     if (userLoggedIn != null && userLoggedIn == commentedUser)
                       PopupMenuButton<String>(
                         icon: const Icon(Icons.more_vert),
@@ -143,7 +157,6 @@ class ForumMessage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                // Message Content
                 Text(
                   message,
                   style: const TextStyle(fontSize: 14),

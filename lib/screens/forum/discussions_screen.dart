@@ -55,7 +55,6 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final uname = request.jsonData?['username']; // Retrieve username from CookieRequest
     final userId = request.jsonData?['user_id']; // Retrieve user ID from CookieRequest
 
     return Scaffold(
@@ -143,7 +142,6 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ForumMessage(
-                                    avatarUrl: "https://via.placeholder.com/150",
                                     name: parentComment.fields.commenterName,
                                     date: "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
                                     message: parentComment.fields.message,
@@ -158,7 +156,6 @@ class _DiscussionScreensState extends State<DiscussionScreens> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 30.0),
                                       child: ForumMessage(
-                                        avatarUrl: "https://via.placeholder.com/150",
                                         name: firstReply.fields.commenterName,
                                         date: "${firstReply.fields.createdAt.month}/${firstReply.fields.createdAt.year}",
                                         message: firstReply.fields.message,

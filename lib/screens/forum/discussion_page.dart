@@ -39,8 +39,9 @@ class _DiscussionPageState extends State<DiscussionPage> {
   void _deleteComment(int index) {
     setState(() {
       forumList.removeAt(index);
-      if (forumList.isEmpty) {
-        Navigator.pop(context); // Pop the page if all comments are deleted
+      // If the parent comment is deleted or the list becomes empty
+      if (index == 0 || forumList.isEmpty) {
+        Navigator.pop(context); // Pop the page
       }
     });
   }
@@ -68,7 +69,6 @@ class _DiscussionPageState extends State<DiscussionPage> {
                           userLoggedIn: userId,
                           commentedUser: forumList[0].fields.user,
                           forum: forumList[0].pk,
-                          avatarUrl: "https://via.placeholder.com/150",
                           name: forumList[0].fields.commenterName,
                           date:
                               "${forumList[0].fields.createdAt.month}/${forumList[0].fields.createdAt.year}",
@@ -77,15 +77,16 @@ class _DiscussionPageState extends State<DiscussionPage> {
                             _deleteComment(0); // Delete the parent comment
                           },
                         ),
-                        const Divider(color: Colors.grey, thickness: 1),
                         // Replies
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Jawaban (${forumList.length - 1})",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                        if (forumList.length > 1)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Jawaban (${forumList.length - 1})",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
                         ...forumList.skip(1).map((reply) {
                           final index = forumList.indexOf(reply);
                           return Column(
@@ -94,7 +95,6 @@ class _DiscussionPageState extends State<DiscussionPage> {
                                 userLoggedIn: userId,
                                 commentedUser: reply.fields.user,
                                 forum: reply.pk,
-                                avatarUrl: "https://via.placeholder.com/150",
                                 name: reply.fields.commenterName,
                                 date:
                                     "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
