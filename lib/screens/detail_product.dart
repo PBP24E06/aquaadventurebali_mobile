@@ -27,6 +27,7 @@ class ProductDetailPage extends StatelessWidget {
     return listReview;
   }
 
+
   Future<void> addToWishlist(CookieRequest request, BuildContext context) async {
     try {
       final response = await request.post(

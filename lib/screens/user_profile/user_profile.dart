@@ -29,7 +29,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   }
 
   Future<UserProfile> fetchUserProfile(CookieRequest request, int userId) async {
-    final response = await request.get('http://127.0.0.1:8000/user_profile_json/$userId/');
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/user_profile_json/$userId/');
     final jsonString = jsonEncode(response[0]);
     return userProfileFromJson(jsonString);
   }

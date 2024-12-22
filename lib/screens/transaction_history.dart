@@ -3,6 +3,7 @@ import 'package:aquaadventurebali_mobile/models/transaction.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
+import 'package:aquaadventurebali_mobile/screens/report_form.dart';
 import 'package:aquaadventurebali_mobile/screens/review_form.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,6 +47,18 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
       return false;
     }
   }
+
+  Future<bool> hasUserComplained(CookieRequest request, String productId) async {
+  try {
+    final response = await request.get(
+      'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/has-user-complained-json/$productId/',
+    );
+
+    return response['has_complained'] ?? false;
+  } catch (e) {
+    return false;
+  }
+}
 
   Future<Product> fetchProduct(CookieRequest request, String productId) async{
     final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/json-product/$productId');
@@ -260,6 +273,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        // Write Review Button
                                         FutureBuilder(
                                           future: hasUserReviewed(request, snapshot.data![index].fields.product),
                                           builder: (context, AsyncSnapshot<bool> reviewSnapshot) {
@@ -301,6 +315,51 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                             );
                                           },
                                         ),
+
+                                        // Write a Complaint Button
+                                        FutureBuilder(
+                                          future: hasUserComplained(request, snapshot.data![index].fields.product),
+                                          builder: (context, AsyncSnapshot<bool> complaintSnapshot) {
+                                            return ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  side: BorderSide(
+                                                    color: (complaintSnapshot.data ?? false) ? Colors.grey : Colors.red,
+                                                    width: 1.0,
+                                                  ),
+                                                ),
+                                                elevation: 2,
+                                                fixedSize: const Size(130, 35),
+                                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                              ),
+                                              onPressed: (complaintSnapshot.data ?? false) ? null : () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ReportFormPage(
+                                                      productId: snapshot.data![index].fields.product,
+                                                      productName: productSnapshot.data!.fields.name,
+                                                      productImage: productSnapshot.data!.fields.gambar,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text(
+                                                (complaintSnapshot.data ?? false) ? "Complaint Sent" : "Write Complaint",
+                                                style: GoogleFonts.sourceSans3(
+                                                  fontSize: 12.0,
+                                                  color: (complaintSnapshot.data ?? false) ? Colors.grey : Colors.red,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
+                                          },
+                                        ),
+
+                                        // Beli Lagi Button
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,
@@ -338,7 +397,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                       ],
                                     ),
                                   ),
-                                ), 
+                                ),
                               ]
                             );
                           }
