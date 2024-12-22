@@ -40,6 +40,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    String imageUrl = "assets/${widget.productImage}";
 
     return Scaffold(
       appBar: AppBar(
@@ -78,8 +79,8 @@ class _AllReviewPageState extends State<AllReviewPage> {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image(
-                      image: AssetImage(widget.productImage),
+                    child: Image.network(
+                      imageUrl,
                       height: 200,
                       width: double.infinity,
                       errorBuilder: (context, error, stackTrace) {
@@ -108,12 +109,12 @@ class _AllReviewPageState extends State<AllReviewPage> {
                 Row(
                   children: [
                     Text(
-                      'Rating: ${avgRating.toStringAsFixed(1)} / 5.0',
+                      reviews.isEmpty ? '' : 'Rating: ${avgRating.toStringAsFixed(1)} / 5.0',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '(${reviews.length} reviews)',
+                      reviews.isEmpty ? '(No reviews yet)' : '(${reviews.length} reviews)',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -124,7 +125,7 @@ class _AllReviewPageState extends State<AllReviewPage> {
 
                 // Reviews List
                 Text(
-                  'Reviews',
+                  reviews.isEmpty ? '' : 'Reviews',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 16),

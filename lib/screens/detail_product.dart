@@ -1,4 +1,5 @@
 import 'package:aquaadventurebali_mobile/screens/all_review.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 
@@ -26,7 +27,6 @@ class ProductDetailPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 imageUrl,
-                fit: BoxFit.cover,
                 width: double.infinity,
                 height: 300,
                 errorBuilder: (context, error, stackTrace) {
@@ -138,8 +138,9 @@ class ProductDetailPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Produk dibeli!')),
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => CheckoutFormPage(productId: product.pk)
+                    )
                   );
                 },
                 style: ElevatedButton.styleFrom(

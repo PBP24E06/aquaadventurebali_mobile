@@ -6,11 +6,13 @@ import 'dart:convert';
 class ReviewFormPage extends StatefulWidget {
   final String productId;
   final String productName;
+  final String productImage;
 
   const ReviewFormPage({
     super.key, 
     required this.productId,
     required this.productName,
+    required this.productImage,
   });
 
   @override
@@ -25,6 +27,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    String imageUrl = "assets/${widget.productImage}";
 
     return Scaffold(
       appBar: AppBar(
@@ -44,6 +47,29 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          imageUrl,
+                          height: 200,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey[200],
+                              child: const Center(
+                                child: Text('Image not available'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    
                     const Text(
                       'Rating',
                       style: TextStyle(

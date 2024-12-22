@@ -175,7 +175,10 @@ Future<void> _deleteProduct(int id) async {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            // Aksi untuk membeli produk
+                                            Navigator.push(context, MaterialPageRoute(
+                                              builder: (context) => CheckoutFormPage(productId: snapshot.data![index].pk)
+                                              )
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(

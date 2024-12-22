@@ -268,6 +268,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
                                                     builder: (context) => ReviewFormPage(
                                                       productId: snapshot.data![index].fields.product,
                                                       productName: productSnapshot.data!.fields.name,
+                                                      productImage: productSnapshot.data!.fields.gambar,
                                                     ),
                                                   ),
                                                 );
