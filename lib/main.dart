@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.deepPurple,
           ).copyWith(secondary: Colors.blue[400]),
         ),
-        home: const MyHomePage(),
+        home: const LoginPage(),
       ),
     );
   }

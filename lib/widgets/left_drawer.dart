@@ -64,6 +64,7 @@ class LeftDrawer extends StatelessWidget {
                   );
               },
             ),
+<<<<<<< HEAD
             ListTile(
               leading: const Icon(Icons.add_shopping_cart),
               title: const Text('Tes checkout form'),
@@ -76,6 +77,20 @@ class LeftDrawer extends StatelessWidget {
                     ));
               },
             ),
+=======
+            // ListTile(
+            //   leading: const Icon(Icons.add_shopping_cart),
+            //   title: const Text('Tes checkout form'),
+            //   // Bagian redirection ke MyHomePage
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const CheckoutFormPage(),
+            //         ));
+            //   },
+            // ),
+>>>>>>> main
         ],
       ),
     );
