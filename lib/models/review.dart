@@ -35,12 +35,16 @@ class Review {
 class Fields {
     String product;
     int user;
+    String username;
+    String? profilePicture;
     int rating;
     String reviewText;
 
     Fields({
         required this.product,
         required this.user,
+        required this.username,
+        this.profilePicture,
         required this.rating,
         required this.reviewText,
     });
@@ -48,6 +52,8 @@ class Fields {
     factory Fields.fromJson(Map<String, dynamic> json) => Fields(
         product: json["product"],
         user: json["user"],
+        username: json["username"],
+        profilePicture: json["profile_picture"],
         rating: json["rating"],
         reviewText: json["review_text"],
     );
@@ -55,6 +61,8 @@ class Fields {
     Map<String, dynamic> toJson() => {
         "product": product,
         "user": user,
+        "username": username,
+        "profilePicture": profilePicture,
         "rating": rating,
         "review_text": reviewText,
     };

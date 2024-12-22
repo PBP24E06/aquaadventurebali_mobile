@@ -1,5 +1,4 @@
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
-import 'package:aquaadventurebali_mobile/widgets/left_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -59,9 +58,10 @@ Future<bool> isAdmin(CookieRequest request) async {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Entry List'),
+        title: const Text('Aqua Adventure Bali'),
+        backgroundColor: const Color(0xFF0F172A),
+        foregroundColor: Colors.white,
       ),
-      drawer: const LeftDrawer(),
       body: Column(
         children: [
           // Tambahkan tombol Add Product di atas sebelum card
