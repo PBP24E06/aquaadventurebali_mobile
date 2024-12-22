@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -154,6 +155,40 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
                     child: const Text('Register'),
+                  ),
+                  const SizedBox(height: 36.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: Text(
+                      'Already have an account? Login',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyHomePage()),
+                      );
+                    },
+                    child: Text(
+                      'Browse as Guest',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
                 ],
               ),
