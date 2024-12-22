@@ -281,10 +281,7 @@ class _CheckoutFormPageState extends State<CheckoutFormPage>{
                                           .showSnackBar(const SnackBar(
                                       content: Text("Checkout berhasil!"),
                                       ));
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const MyHomePage()),
-                                      );
+                                      Navigator.pop(context);
                                   } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(

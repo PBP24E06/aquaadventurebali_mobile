@@ -1,3 +1,4 @@
+import 'package:aquaadventurebali_mobile/screens/forum/discussions_screen.dart';
 import 'package:aquaadventurebali_mobile/models/review.dart';
 import 'package:aquaadventurebali_mobile/screens/all_review.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
@@ -245,6 +246,26 @@ class ProductDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 32),
 
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DiscussionScreens(productId: product.pk, product: product.fields)));
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  backgroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Lihat pertanyaan produk",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             // Tombol Beli
             SizedBox(
               width: double.infinity,

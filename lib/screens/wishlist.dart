@@ -15,17 +15,12 @@ class _WishlistPageState extends State<WishlistPage> {
   Future<List<Product>> fetchWishlist(CookieRequest request) async {
     try {
       final response = await request.get('http://127.0.0.1:8000/get-user-wishlist/');
-      print("response: $response");
       List<Product> listProduct = [];
       for (var d in response) {
-        print("Halo");
         if (d != null) {
-          print(d);
           listProduct.add(Product.fromJson(d));
-          print("list: $listProduct");
         }
       }
-      print("List product: $listProduct");
       return listProduct;
     } catch (e) {
       return [];

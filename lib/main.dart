@@ -1,10 +1,7 @@
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:aquaadventurebali_mobile/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:aquaadventurebali_mobile/screens/login.dart';
-//import 'package:aquaadventurebali_mobile/screens/menu.dart';
 import 'package:aquaadventurebali_mobile/screens/menu.dart';
-import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/semantics.dart';
@@ -37,5 +34,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
