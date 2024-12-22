@@ -25,6 +25,50 @@ class ProductDetailPage extends StatelessWidget {
     return listReview;
   }
 
+  Future<void> addToWishlist(CookieRequest request, BuildContext context) async {
+    try {
+      final response = await request.post(
+        'http://127.0.0.1:8000/add-wishlist-flutter/${product.pk}/',
+        {},
+      );
+
+      if (context.mounted) {
+        if (response['status'] == 'success') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Berhasil menambahkan wishlist!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          if (response['message'] == 'User not logged in') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Anda belum login. Silakan login terlebih dahulu.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Gagal menambahkan ke wishlist'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error occurred while adding to wishlist'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +270,7 @@ class ProductDetailPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {}, // Placeholder tanpa aksi
+                onPressed: () {addToWishlist(request, context);},
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   backgroundColor: Colors.blue,
