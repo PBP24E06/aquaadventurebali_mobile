@@ -72,6 +72,12 @@ class ProductDetailPage extends StatelessWidget {
     }
   }
 
+  Future<bool> isAdmin(CookieRequest request) async {
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/user-status/');
+    return response['is_admin'];
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // URL gambar
@@ -310,31 +316,40 @@ class ProductDetailPage extends StatelessWidget {
               ),
             ),
             // Tombol Edit Produk
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigasi ke halaman EditProductPage
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProductPage(product: product.fields, pk:product.pk),
-                    ),
-                  );
+            FutureBuilder(
+              future: isAdmin(request),
+              builder: (context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.hasData && snapshot.data == true) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Navigasi ke halaman EditProductPage
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProductPage(product: product.fields, pk:product.pk),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          backgroundColor: Colors.yellow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          "Edit Produk",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    );
+                } else {
+                    return const SizedBox.shrink();
+                  }
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  backgroundColor: Colors.yellow,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  "Edit Produk",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
               ),
-            ),
 
           ],
         ),
