@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:aquaadventurebali_mobile/models/forum.dart';
 import 'discussion_form.dart'; // Modular form widget
 import 'package:aquaadventurebali_mobile/widgets/forum/forum_message.dart'; // Modular message widget
@@ -6,15 +8,11 @@ import 'package:aquaadventurebali_mobile/widgets/forum/forum_message.dart'; // M
 class DiscussionPage extends StatefulWidget {
   final int? parentCommentsId;
   final String productId;
-  final String? uname;
-  final int userId;
   final List<Forum> forum;
 
   const DiscussionPage({
     required this.parentCommentsId,
     required this.productId,
-    required this.uname,
-    required this.userId,
     required this.forum,
     super.key,
   });
@@ -40,8 +38,9 @@ class _DiscussionPageState extends State<DiscussionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final parentComment = forumList[0]; // The main question
-    final replies = forumList.skip(1).toList(); // Replies to the question
+    final request = context.watch<CookieRequest>();
+    final uname = request.jsonData?['username']; // Fetch username dynamically
+    final userId = request.jsonData?['user_id']; // Fetch user ID dynamically
 
     return Scaffold(
       appBar: AppBar(
@@ -57,64 +56,66 @@ class _DiscussionPageState extends State<DiscussionPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ForumMessage(
-                      userLoggedIn: widget.userId,
-                      commentedUser: parentComment.fields.user,
-                      forum: parentComment.pk,
+                      userLoggedIn: userId,
+                      commentedUser: forumList[0].fields.user,
+                      forum: forumList[0].pk,
                       avatarUrl: "https://via.placeholder.com/150",
-                      name: parentComment.fields.commenterName,
+                      name: forumList[0].fields.commenterName,
                       date:
-                          "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
-                      message: parentComment.fields.message,
+                          "${forumList[0].fields.createdAt.month}/${forumList[0].fields.createdAt.year}",
+                      message: forumList[0].fields.message,
                       onDelete: () => setState(() {
                         forumList.removeAt(0); // Remove the parent comment
                       }),
                     ),
                   ),
-                  const Divider(),
+                  const Divider(color: Color.fromARGB(255, 222, 221, 221), height: 1, thickness: 1),
                   // Section header for replies
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
                     child: Text(
-                      "Jawaban (${replies.length})",
+                      "Jawaban (${forumList.length - 1})",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                   ),
-                  const Divider(),
                   // Replies content
-                  ...replies.map((reply) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      child: ForumMessage(
-                        userLoggedIn: widget.userId,
-                        commentedUser: reply.fields.user,
-                        forum: reply.pk,
-                        avatarUrl: "https://via.placeholder.com/150",
-                        name: reply.fields.commenterName,
-                        date:
-                            "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
-                        message: reply.fields.message,
-                        onDelete: () => setState(() {
-                          forumList.remove(reply); // Remove the reply
-                        }),
-                      ),
+                  ...forumList.skip(1).map((reply) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                          child: ForumMessage(
+                            userLoggedIn: userId,
+                            commentedUser: reply.fields.user,
+                            forum: reply.pk,
+                            avatarUrl: "https://via.placeholder.com/150",
+                            name: reply.fields.commenterName,
+                            date:
+                                "${reply.fields.createdAt.month}/${reply.fields.createdAt.year}",
+                            message: reply.fields.message,
+                            onDelete: () => setState(() {
+                              forumList.remove(reply); // Remove the reply
+                            }),
+                          ),
+                        ),
+                        const Divider(color: Color.fromARGB(255, 222, 221, 221), height: 1, thickness: 1),
+                      ],
                     );
                   }).toList(),
                 ],
               ),
             ),
             // Fixed comment input form at the bottom
-            if (widget.uname != null)
+            if (uname != null)
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(8.0),
                 child: DiscussionForm(
                   productId: widget.productId,
-                  userId: widget.userId,
                   parentCommentsId: widget.parentCommentsId,
-                  uname: widget.uname!,
                   onCommentAdded: _addNewComment, // Pass the callback
                 ),
               ),

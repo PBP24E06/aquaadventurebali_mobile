@@ -55,17 +55,17 @@ class LeftDrawer extends StatelessWidget {
               },
             ),
             
-            ListTile(
-              leading: const Icon(Icons.add_reaction_rounded),
-              title: const Text('Daftar Produk'),
-              onTap: () {
-                  // Route menu ke halaman produk
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ProductPage()),
-                  );
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.add_reaction_rounded),
+            //   title: const Text('Daftar Produk'),
+            //   onTap: () {
+            //       // Route menu ke halaman produk
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(builder: (context) => const ProductPage(uname, userId)),
+            //       );
+            //   },
+            // ),
             // ListTile(
             //   leading: const Icon(Icons.add_shopping_cart),
             //   title: const Text('Tes checkout form'),

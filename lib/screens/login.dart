@@ -121,13 +121,12 @@ class _LoginPageState extends State<LoginPage> {
                       if (request.loggedIn) {
                         String message = response['message'];
                         String uname = response['username'];
-                        int id = response["user_id"];
                         if (context.mounted) {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  MyHomePage(uname: uname, userId: id),
+                                  MyHomePage(),
                             ),
                           );
                           ScaffoldMessenger.of(context)

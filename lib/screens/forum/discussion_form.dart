@@ -7,15 +7,11 @@ import 'package:aquaadventurebali_mobile/models/forum.dart';
 class DiscussionForm extends StatefulWidget {
   final int? parentCommentsId;
   final String productId;
-  final int userId;
-  final String uname;
   final Function(Forum) onCommentAdded; // Callback for adding a new comment
 
   const DiscussionForm({
     this.parentCommentsId,
     required this.productId,
-    required this.userId,
-    required this.uname,
     required this.onCommentAdded,
     super.key,
   });
@@ -31,6 +27,8 @@ class _DiscussionFormState extends State<DiscussionForm> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final uname = request.jsonData?['username']; // Fetch username dynamically
+    final userId = request.jsonData?['user_id']; // Fetch user ID dynamically
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -43,7 +41,7 @@ class _DiscussionFormState extends State<DiscussionForm> {
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: "Beri komentar",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.5)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -60,32 +58,27 @@ class _DiscussionFormState extends State<DiscussionForm> {
               child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    print("ADD PARENT COMMENT ${widget.parentCommentsId}");
-                    print("ADD USER ID ${widget.userId}");
-                    print("ADD COMMENTER_NAME ${widget.uname}");
-                    print("ADD COMMENTS $_comments");
                     final response = await request.post(
                       "http://127.0.0.1:8000/add_discussion_or_reply_mobile/${widget.productId}/",
                       jsonEncode(<String, dynamic>{
                         'parent_id': widget.parentCommentsId,
-                        'user_id': widget.userId,
-                        'commenter_name': widget.uname,
+                        'user_id': userId,
+                        'commenter_name': uname,
                         'comments': _comments,
                         'date': DateTime.now().toIso8601String(),
                       }),
                     );
-                    print(response);
+
                     if (response != null && response['status'] == "success") {
-                      print("Successfully added discussion");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Sukses menambahkan diskusi")),
                       );
+
                       // Deserialize 'new_comment' and map it to a Forum object
                       final newCommentList = jsonDecode(response['new_comment']) as List<dynamic>;
                       final newCommentJson = newCommentList.first as Map<String, dynamic>;
                       final newComment = Forum.fromJson(newCommentJson);
 
-                      print("NEW_COMMENT $newComment");
                       widget.onCommentAdded(newComment); // Trigger the callback
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

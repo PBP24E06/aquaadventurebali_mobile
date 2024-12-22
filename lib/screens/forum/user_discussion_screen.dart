@@ -1,25 +1,21 @@
-import 'dart:collection';
 import 'dart:convert';
+import 'package:aquaadventurebali_mobile/screens/detail_product.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:aquaadventurebali_mobile/models/forum.dart';
 import 'package:aquaadventurebali_mobile/widgets/forum/forum_message.dart';
-Import the ProductPage
+import 'package:aquaadventurebali_mobile/models/product.dart';
 
 class UserDiscussionScreen extends StatefulWidget {
-  final String uname;
-  final int userId;
-
-  const UserDiscussionScreen({required this.uname, required this.userId, Key? key})
-      : super(key: key);
+  const UserDiscussionScreen({Key? key}) : super(key: key);
 
   @override
   State<UserDiscussionScreen> createState() => _UserDiscussionScreenState();
 }
 
 class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
-  late Future<Map<int, List<Forum>>> _forumFuture;
+  late Future<List<Map<String, dynamic>>> _discussionsFuture;
 
   @override
   void initState() {
@@ -29,25 +25,30 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
 
   void _fetchData() {
     final request = context.read<CookieRequest>();
-    _forumFuture = fetchForum(request, widget.userId);
+    final userId = request.jsonData?["user_id"];
+    if (userId != null) {
+      _discussionsFuture = fetchUserDiscussions(request, userId);
+    }
   }
 
-  Future<Map<int, List<Forum>>> fetchForum(CookieRequest request, int userId) async {
-    final response = await request.get("http://127.0.0.1:8000/show_user_forum_json_mobile/$userId/");
-    var data = response["discussions"];
-    Map<int, List<Forum>> discussionMap = HashMap();
+  Future<List<Map<String, dynamic>>> fetchUserDiscussions(CookieRequest request, int userId) async {
+    final response = await request.get("http://127.0.0.1:8000/show_user_discussion_mobile_json/$userId/");
 
-    for (var commentsJson in data) {
-      Forum comment = Forum.fromJson(commentsJson);
-      if (comment.fields.parent == null) {
-        discussionMap.putIfAbsent(comment.pk, () => []);
-        discussionMap[comment.pk]!.insert(0, comment);
-      } else {
-        discussionMap.putIfAbsent(comment.fields.parent!, () => []);
-        discussionMap[comment.fields.parent!]!.add(comment);
-      }
+    if (!response.containsKey('discussions')) {
+      throw Exception("Key 'discussions' not found in the API response");
     }
-    return discussionMap;
+
+    final List<dynamic> discussionsData = response['discussions'];
+
+    return discussionsData.map((entry) {
+      final discussionData = jsonDecode(entry['discussion']) as Map<String, dynamic>;
+      final productData = jsonDecode(entry['product']) as Map<String, dynamic>;
+
+      return {
+        'discussion': Forum.fromJson(discussionData),
+        'product': Product.fromJson(productData),
+      };
+    }).toList();
   }
 
   @override
@@ -56,10 +57,6 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
             const Expanded(
               child: Text(
                 "Diskusi Pengguna",
@@ -67,21 +64,21 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
               onPressed: () => setState(() => _fetchData()),
             ),
           ],
         ),
       ),
-      body: FutureBuilder<Map<int, List<Forum>>>(
-        future: _forumFuture,
-        builder: (context, forumSnapshot) {
-          if (forumSnapshot.connectionState == ConnectionState.waiting) {
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _discussionsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (forumSnapshot.hasError) {
-            return Center(child: Text("Error: ${forumSnapshot.error}"));
-          } else if (forumSnapshot.hasData) {
-            final discussions = forumSnapshot.data!;
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (snapshot.hasData) {
+            final discussions = snapshot.data!;
             if (discussions.isEmpty) {
               return const Center(child: Text("Belum ada diskusi"));
             }
@@ -89,82 +86,67 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
             return ListView.builder(
               itemCount: discussions.length,
               itemBuilder: (context, index) {
-                final entry = discussions.entries.elementAt(index);
-                final parentComment = entry.value[0];
-                final replies = entry.value.sublist(1);
-                final remainingRepliesCount = replies.length > 1 ? replies.length - 1 : 0;
+                final discussion = discussions[index]['discussion'] as Forum;
+                final product = discussions[index]['product'] as Product;
 
-                return Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(15.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductPage(
-                                productId: parentComment.fields.productId, // Pass the productId
-                                uname: widget.uname,
-                              ),
-                            ),
-                          ).then((_) => setState(() => _fetchData()));
-                        },
-                        child: Column(
+                return InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product.fields, productId: product.pk)));
+                  },
+                  child: Column(
+                    children: [
+                      // Horizontal Layout for Product and Name
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ForumMessage(
-                              avatarUrl: "https://via.placeholder.com/150",
-                              name: parentComment.fields.commenterName,
-                              date:
-                                  "${parentComment.fields.createdAt.month}/${parentComment.fields.createdAt.year}",
-                              message: parentComment.fields.message,
-                              userLoggedIn: widget.userId,
-                              commentedUser: parentComment.fields.user,
-                              forum: parentComment.pk,
-                              onDelete: () {
-                                setState(() => _fetchData());
-                              },
+                            // Product Image
+                            Image.network(
+                              "assets/${product.fields.gambar}",
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 60,
+                                height: 60,
+                                color: Colors.grey,
+                                child: const Center(child: Text("No Image")),
+                              ),
                             ),
-                            if (replies.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30.0, top: 10.0),
-                                child: ForumMessage(
-                                  avatarUrl: "https://via.placeholder.com/150",
-                                  name: replies[0].fields.commenterName,
-                                  date:
-                                      "${replies[0].fields.createdAt.month}/${replies[0].fields.createdAt.year}",
-                                  message: replies[0].fields.message,
-                                  userLoggedIn: widget.userId,
-                                  commentedUser: replies[0].fields.user,
-                                  forum: replies[0].pk,
-                                  onDelete: () {
-                                    setState(() => _fetchData());
-                                  },
-                                ),
+                            const SizedBox(width: 8),
+                            // Product Name
+                            Expanded(
+                              child: Text(
+                                product.fields.name,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            if (remainingRepliesCount > 0)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30.0, top: 8.0),
-                                child: Text(
-                                  "$remainingRepliesCount jawaban lainnya",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                    const Divider(
-                      color: Color.fromARGB(255, 188, 188, 188),
-                      height: 1,
-                      thickness: 1,
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+
+                      // Parent Comment
+                      Padding(
+                        padding: EdgeInsets.only(left: 30.0, bottom: 15.0),
+                        child: ForumMessage(
+                          avatarUrl: "https://via.placeholder.com/150",
+                          name: discussion.fields.commenterName,
+                          date: "${discussion.fields.createdAt.month}/${discussion.fields.createdAt.year}",
+                          message: discussion.fields.message,
+                          userLoggedIn: context.read<CookieRequest>().jsonData?["user_id"],
+                          commentedUser: discussion.fields.user,
+                          forum: discussion.pk,
+                          onDelete: () => setState(() => _fetchData()),
+                        ),
+                      ),
+
+                      const Divider(color: Color.fromARGB(255, 222, 221, 221), height: 1, thickness: 1),
+                    ],
+                  ),
                 );
               },
             );

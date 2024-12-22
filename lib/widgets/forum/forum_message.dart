@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ForumMessage extends StatelessWidget {
   final String avatarUrl;
@@ -25,10 +27,17 @@ class ForumMessage extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> _deleteComment(BuildContext context) async {
-    final url = "http://127.0.0.1:8000/delete_discussion/$forum/";
+    final request = context.read<CookieRequest>();
+    final userId = request.jsonData?['user_id'];
+    final url = "http://127.0.0.1:8000/delete_discussion_mobile/$forum/";
 
     try {
-      final response = await http.delete(Uri.parse(url));
+      final response = await http.delete(
+        Uri.parse(url),
+        body: jsonEncode({
+          'user_id': userId,
+        }),
+        );
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
