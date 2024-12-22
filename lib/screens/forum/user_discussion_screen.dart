@@ -91,7 +91,7 @@ class _UserDiscussionScreenState extends State<UserDiscussionScreen> {
 
                 return InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product.fields, productId: product.pk)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)));
                   },
                   child: Column(
                     children: [

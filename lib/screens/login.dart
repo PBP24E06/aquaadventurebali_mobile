@@ -185,6 +185,23 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 12.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyHomePage()),
+                      );
+                    },
+                    child: Text(
+                      'Browse as Guest',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

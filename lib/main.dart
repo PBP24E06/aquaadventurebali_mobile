@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.deepPurple,
           ).copyWith(secondary: Colors.blue[400]),
         ),
-        home: const MyHomePage(), // No need to pass uname and userid
+        home: const MyHomePage(),
       ),
     );
   }

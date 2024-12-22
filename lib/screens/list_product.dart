@@ -1,4 +1,4 @@
-import 'package:aquaadventurebali_mobile/widgets/left_drawer.dart';
+import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -28,7 +28,7 @@ class _ProductPageState extends State<ProductPage> {
     return productList;
   }
 
-Future<void> _deleteProduct(int id) async {
+Future<void> _deleteProduct(String id) async {
     final response = await http.delete(
       Uri.parse('http://127.0.0.1:8000/delete-flutter/$id/'),
     );
@@ -37,7 +37,10 @@ Future<void> _deleteProduct(int id) async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produk berhasil dihapus!')),
       );
-      _ProductPageState(); // Refresh data produk
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ProductPage()),
+      ); // Refresh data produk
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus produk!')),
@@ -45,40 +48,55 @@ Future<void> _deleteProduct(int id) async {
     }
   }
 
+Future<bool> isAdmin(CookieRequest request) async {
+  final response = await request.get('http://127.0.0.1:8000/user-status/');
+  return response['is_admin'];
+}
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Entry List'),
+        title: const Text('Aqua Adventure Bali'),
+        backgroundColor: const Color(0xFF0F172A),
+        foregroundColor: Colors.white,
       ),
-      // drawer: const LeftDrawer(),
       body: Column(
         children: [
           // Tambahkan tombol Add Product di atas sebelum card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Navigasi ke halaman tambah produk
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+          FutureBuilder(
+            future: isAdmin(request), // Mengecek apakah admin
+            builder: (context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData && snapshot.data == true) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigasi ke halaman tambah produk
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Add Product",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                "Add Product",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+              } else {
+                return const SizedBox.shrink(); // Jangan tampilkan apa-apa
+              }
+            },
           ),
           // Bagian untuk menampilkan daftar produk
           Expanded(
@@ -107,6 +125,7 @@ Future<void> _deleteProduct(int id) async {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
+                        final pk = snapshot.data![index].pk;
                         String imageUrl = "assets/${product.gambar}";
 
                         return Card(
@@ -157,7 +176,7 @@ Future<void> _deleteProduct(int id) async {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProductDetailPage(product: product, productId: snapshot.data![index].pk),
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index]),
                                               ),
                                             );
                                           },
@@ -174,6 +193,12 @@ Future<void> _deleteProduct(int id) async {
                                         ElevatedButton(
                                           onPressed: () {
                                             // Aksi untuk membeli produk
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => CheckoutFormPage(productId: snapshot.data![index].pk),
+                                              ),
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(
@@ -185,20 +210,28 @@ Future<void> _deleteProduct(int id) async {
                                           ),
                                           child: const Text("Beli"),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Panggil fungsi untuk menghapus produk
-                                            _deleteProduct(product.id);
+                                        FutureBuilder(
+                                          future: isAdmin(request),
+                                          builder: (context, AsyncSnapshot<bool> snapshot) {
+                                            if (snapshot.hasData && snapshot.data == true) {
+                                              return ElevatedButton(
+                                                onPressed: () {
+                                                  // Panggil fungsi untuk menghapus produk
+                                                  _deleteProduct(pk);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                  backgroundColor: Colors.red,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                ),
+                                                child: const Text("Delete"),
+                                              );
+                                            } else {
+                                              return const SizedBox.shrink();
+                                            }
                                           },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 8),
-                                            backgroundColor: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text("Delete"),
                                         ),
                                       ],
                                     ),
