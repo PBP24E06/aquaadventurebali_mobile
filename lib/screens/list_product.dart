@@ -6,6 +6,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:aquaadventurebali_mobile/screens/productentry_form.dart';
 import 'package:http/http.dart' as http;
+import 'package:aquaadventurebali_mobile/screens/detail_product.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -107,7 +108,7 @@ Future<void> _deleteProduct(int id) async {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (_, index) {
                         final product = snapshot.data![index].fields;
-                        String imageUrl = "http://127.0.0.1:8000/${product.gambar}";
+                        String imageUrl = "assets/${product.gambar}";
 
                         return Card(
                           elevation: 4,
@@ -122,10 +123,7 @@ Future<void> _deleteProduct(int id) async {
                                     top: Radius.circular(12)),
                                 child: Image.network(
                                   imageUrl,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Center(
-                                        child: Text('Gambar gagal dimuat.'));
-                                  },
+                                  
                                 ),
                               ),
                               Padding(
@@ -157,7 +155,12 @@ Future<void> _deleteProduct(int id) async {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            // Aksi untuk detail produk
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields),
+                                              ),
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(
