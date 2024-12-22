@@ -16,7 +16,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   Future<List<Product>> fetchProducts(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/json-product/');
+    final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/json-product/');
     var data = response;
 
     List<Product> productList = [];
@@ -30,7 +30,7 @@ class _ProductPageState extends State<ProductPage> {
 
 Future<void> _deleteProduct(String id) async {
     final response = await http.delete(
-      Uri.parse('http://127.0.0.1:8000/delete-flutter/$id/'),
+      Uri.parse('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/delete-flutter/$id/'),
     );
 
     if (response.statusCode == 200) {
