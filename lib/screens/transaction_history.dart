@@ -81,6 +81,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaction History'),
+        backgroundColor: const Color(0xFF0F172A),
+        foregroundColor: Colors.white,
       ),
       body: FutureBuilder(
         future: fetchTransactionHistory(request),
