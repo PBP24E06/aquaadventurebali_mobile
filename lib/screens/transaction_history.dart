@@ -37,7 +37,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage>{
   Future<bool> hasUserReviewed(CookieRequest request, String productId) async {
     try {
       final response = await request.get(
-        'http://127.0.0.1:8000/has-user-reviewed-json/$productId/',
+        'https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/has-user-reviewed-json/$productId/',
       );
 
       return response['has_reviewed'] ?? false;

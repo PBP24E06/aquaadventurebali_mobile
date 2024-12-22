@@ -229,7 +229,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                           try {
                             final response = await request.postJson(
-                              "http://127.0.0.1:8000/edit-profile-flutter/",
+                              "https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/edit-profile-flutter/",
                               jsonEncode({
                                 'alamat': _alamatController.text,
                                 'birthdate': _birthdateController.text,

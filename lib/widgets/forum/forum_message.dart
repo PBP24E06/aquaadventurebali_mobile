@@ -62,7 +62,7 @@ class ForumMessage extends StatelessWidget {
 
   Future<Profile?> fetchProfile(CookieRequest request, int userId) async {
     try {
-      final response = await request.get('http://127.0.0.1:8000/show-profile-by-id-json/$userId');
+      final response = await request.get('https://reyvano-mario-aquaadventurebali.pbp.cs.ui.ac.id/show-profile-by-id-json/$userId');
       if (response is List && response.isNotEmpty) {
         return Profile.fromJson(response[0]);
       }
