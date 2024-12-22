@@ -1,6 +1,7 @@
 import 'package:aquaadventurebali_mobile/models/review.dart';
 import 'package:aquaadventurebali_mobile/screens/all_review.dart';
 import 'package:aquaadventurebali_mobile/screens/checkout_form.dart';
+import 'package:aquaadventurebali_mobile/screens/edit_product.dart';
 import 'package:flutter/material.dart';
 import 'package:aquaadventurebali_mobile/models/product.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -24,6 +25,7 @@ class ProductDetailPage extends StatelessWidget {
     }
     return listReview;
   }
+
 
   Future<void> addToWishlist(CookieRequest request, BuildContext context) async {
     try {
@@ -73,7 +75,7 @@ class ProductDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // URL gambar
-    // String imageUrl = "http://127.0.0.1:8000/${product.fields.gambar}";
+    String imageUrl = "http://127.0.0.1:8000/${product.fields.gambar}";
     final request = context.watch<CookieRequest>();
 
     return Scaffold(
@@ -293,7 +295,7 @@ class ProductDetailPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditProductPage(product: product, pk:pk),
+                      builder: (context) => EditProductPage(product: product.fields, pk:product.pk),
                     ),
                   );
                 },

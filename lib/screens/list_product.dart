@@ -176,7 +176,7 @@ Future<bool> isAdmin(CookieRequest request) async {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProductDetailPage(product: snapshot.data![index].fields, pk: pk,),
+                                                builder: (context) => ProductDetailPage(product: snapshot.data![index]),
                                               ),
                                             );
                                           },
